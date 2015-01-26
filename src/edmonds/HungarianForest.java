@@ -9,13 +9,6 @@ package edmonds;
  *
  * @author raf
  */
-public class Edmonds {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
+public class HungarianForest {
     
 }

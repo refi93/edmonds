@@ -15,19 +15,29 @@ public class Blossom {
     ArrayList<Blossom> blossoms; // zoznam bublin vnutri bubliny
     int id = -1; // default hodnota vyjadrujuca, ze ide o zlozenu bublinu
     int thickness;
+    Blossom parent; // kto je jeho parent vramci madarskeho stromu
+    ArrayList<Blossom> children; // zoznam deti vramci madarskeho stromu
+    Character label; // ci je v parovani +/-/0
+    
+    // inicializacia spolocna pre jedniduchy aj zlozeny blossom
+    private void init(){
+        this.blossoms = new ArrayList<Blossom>();
+        this.thickness = 0;
+        this.parent = null;
+        this.children = new ArrayList<Blossom>();
+        this.label = '+';
+    }
     
     // jednovrcholova bublina
     public Blossom(int id){
-        this.blossoms = new ArrayList<Blossom>();
+        init();
         this.id = id;
-        this.thickness = 0;
     }
     
     // bublina pozostavajuca z viacero vrcholov
     public Blossom(ArrayList<Blossom> blossoms){
+        init();
         this.id = -1;
-        this.thickness = 0;
-        this.blossoms = new ArrayList<Blossom>();
         
         if (blossoms.size() % 2 != 1){
             System.err.println("NIEKTO CPE DO BLOSSOMU PARNU KRUZNICU MARHA");
@@ -42,5 +52,14 @@ public class Blossom {
     public int getStopka(){
         if (this.id != -1) return id;
         return blossoms.get(0).getStopka();
+    }
+    
+    // sluzi na updatovanie hrubky kvetu - do dalsej urovne sa updatuje opacne, cize -r
+    public void zmena(int r){
+        this.thickness += r;
+        
+        for(int i = 0;i < children.size(); i++){
+            children.get(i).zmena(-r);
+        }
     }
 }

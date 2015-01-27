@@ -10,5 +10,9 @@ package edmonds;
  * @author raf
  */
 public class HungarianTree {
+    Blossom root;
     
+    public HungarianTree(Blossom root){
+        this.root = root;
+    }
 }

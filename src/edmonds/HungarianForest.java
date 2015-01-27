@@ -18,8 +18,10 @@ public class HungarianForest {
         forest = new ArrayList<HungarianTree>();
     }
     
-    public void zmena(){
-        
+    public void zmena(int r){
+        for (int i = 0;i < forest.size(); i++){
+            forest.get(i).zmena(r);
+        }
     }
     
     public void addTree(HungarianTree t){

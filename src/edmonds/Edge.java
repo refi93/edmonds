@@ -10,31 +10,20 @@ package edmonds;
  * @author raf
  */
 public class Edge {
-    Vertex u,v;
+    int u,v;
     int price;
     
     public Edge(int u, int v, int price) {
-        this.u = new Vertex(u);
-        this.v = new Vertex(v);
-        this.price = price;
-    }
-    
-    // deep copy of edge
-    public Edge copy() {
-        return new Edge(u.copy(), v.copy(), price);
-    }
-    
-    public Edge(Vertex u, Vertex v, int price) {
         this.u = u;
         this.v = v;
         this.price = price;
     }
     
+    
     @Override
     public int hashCode() {
         int hash = 1;
-        hash = hash * 17 + u.hashCode();
-        hash = hash * 31 + v.hashCode();
+        hash = hash * 17 + u * v;
         hash = hash * 13 + price;
         return hash;
     }
@@ -47,8 +36,12 @@ public class Edge {
             return true;
 
         Edge e = (Edge) obj;
-        return (e.u.equals(this.u) && 
-                (e.v.equals(this.v)) && 
-                (e.price == this.price));
+        
+        boolean ret1 = (e.u == this.u) && 
+                (e.v == this.v);
+        boolean ret2 = (e.u == this.v) && 
+                (e.v == this.u);
+        
+        return (ret1 || ret2) && (e.price == this.price);
     }
 }

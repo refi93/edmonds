@@ -12,9 +12,21 @@ import java.util.ArrayList;
  * @author raf
  */
 public class Blossom {
-    ArrayList<Blossom> blossoms; // list of blossoms inside blossom
+    ArrayList<Blossom> blossoms; // zoznam bublin vnutri bubliny
+    int id = -1; // default hodnota vyjadrujuca, ze ide o zlozenu bublinu
+    int thickness;
     
+    // jednovrcholova bublina
+    public Blossom(int id){
+        this.blossoms = new ArrayList<Blossom>();
+        this.id = id;
+        this.thickness = 0;
+    }
+    
+    // bublina pozostavajuca z viacero vrcholov
     public Blossom(ArrayList<Blossom> blossoms){
+        this.id = -1;
+        this.thickness = 0;
         this.blossoms = new ArrayList<Blossom>();
         
         if (blossoms.size() % 2 != 1){
@@ -26,7 +38,9 @@ public class Blossom {
         }
     }
     
-    public Blossom getStopka(){
-        return blossoms.get(0);
+    // rekurzivne vrati stopku bubliny
+    public int getStopka(){
+        if (this.id != -1) return id;
+        return blossoms.get(0).getStopka();
     }
 }

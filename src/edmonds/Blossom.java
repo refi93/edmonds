@@ -14,18 +14,20 @@ import java.util.ArrayList;
 public class Blossom {
     ArrayList<Blossom> blossoms; // zoznam bublin vnutri bubliny
     int id = -1; // default hodnota vyjadrujuca, ze ide o zlozenu bublinu
-    int thickness;
+    int thickness; // hrubka bubliny
+    Edge parentEdge; // hrana z grafu spajajuca kvet s otcovskym kvetom
     Blossom parent; // kto je jeho parent vramci madarskeho stromu
     ArrayList<Blossom> children; // zoznam deti vramci madarskeho stromu
-    Character label; // ci je v parovani +/-/0
+    int levelParity; // ci je v parovani +1/-1
     
-    // inicializacia spolocna pre jedniduchy aj zlozeny blossom
+    // inicializacia spolocna pre jednoduchy aj zlozeny blossom
     private void init(){
         this.blossoms = new ArrayList<Blossom>();
         this.thickness = 0;
         this.parent = null;
         this.children = new ArrayList<Blossom>();
-        this.label = '+';
+        this.levelParity = 1;
+        this.parentEdge = null;
     }
     
     // jednovrcholova bublina

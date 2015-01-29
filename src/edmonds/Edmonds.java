@@ -29,5 +29,12 @@ public class Edmonds {
             freeBlossoms.add(b);
             myGraph.vertices.get(i).addToBlossom(b);
         }
+        
+        // dokym nemame parovanie
+        while (dumbbells.size() < n/2){
+            double r = myGraph.getR();
+            
+            //TODO fixy na stromoch
+        }
     }
 }

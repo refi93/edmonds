@@ -24,7 +24,7 @@ public class TreeNode {
         this.containedBlossom = containedBlossom;
     }
     
-    public void zmena(int r){
+    public void zmena(double r){
         containedBlossom.zmena(r);
         for (int i = 0; i < children.size(); i++){
             // na dalsej urovni menime opacne

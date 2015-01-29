@@ -43,8 +43,8 @@ public class Graph {
         incidenceMatrix[v2][v1] = price;
     }
     
-    public int getR(){
-        int r = Variables.INFTY;
+    public double getR(){
+        double r = Variables.INFTY;
         
         // najprv overime, ake r treba na naplnenie niektorej hrany
         for (int i = 0; i < vertexCount; i++){
@@ -52,7 +52,7 @@ public class Graph {
                 Blossom b1 = vertices.get(i).getOutermostBlossom();
                 Blossom b2 = vertices.get(j).getOutermostBlossom();
                 
-                int changeNeeded = r;
+                double changeNeeded = r;
                 // zmysel to ma riesit len pre dva rozne vonkajsie kvety na parnej urovni
                 // cinky maju uroven 0 (ani parna, ani neparna), cize pre tie to neriesime
                 if ((b1 != b2) && (b1.levelParity == 1) && (b2.levelParity == 1)){  
@@ -75,7 +75,7 @@ public class Graph {
         for (int i = 0; i < vertexCount; i++){
             Blossom b = vertices.get(i).getOutermostBlossom();
             if (b.levelParity == -1){
-                int changeNeeded = b.thickness;
+                double changeNeeded = b.thickness;
                 if (changeNeeded < r){
                     r = changeNeeded;
                 }

@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 class Blossom {
     
-    int thickness;
+    double thickness;
     int levelParity;
     
     // rekurzivne vrati stopku bubliny
@@ -22,7 +22,7 @@ class Blossom {
     }
     
     // sluzi na updatovanie hrubky kvetu
-    public void zmena(int r) {
+    public void zmena(double r) {
         thickness += r;
     }
 }

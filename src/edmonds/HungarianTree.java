@@ -17,7 +17,7 @@ public class HungarianTree {
     }
     
     
-    public void zmena(int r){
+    public void zmena(double r){
         root.zmena(r);
     }
 }

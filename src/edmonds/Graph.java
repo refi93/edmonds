@@ -52,14 +52,21 @@ public class Graph {
                 Blossom b1 = vertices.get(i).getOutermostBlossom();
                 Blossom b2 = vertices.get(j).getOutermostBlossom();
                 
-                
+                int changeNeeded = r;
                 // zmysel to ma riesit len pre dva rozne vonkajsie kvety na parnej urovni
                 // cinky maju uroven 0 (ani parna, ani neparna), cize pre tie to neriesime
-                if ((b1 != b2) && (b1.levelParity == 1) && (b2.levelParity == 1)){
-                    int changeNeeded = incidenceMatrix[i][j] - b1.thickness - b2.thickness;
-                    if (changeNeeded < r) {
-                        r = changeNeeded;
-                    }
+                if ((b1 != b2) && (b1.levelParity == 1) && (b2.levelParity == 1)){  
+                    //TODO - co ak cena hrany neni parna????
+                    changeNeeded = (incidenceMatrix[i][j] - b1.thickness - b2.thickness) / 2;
+                }
+                
+                // ak jedna z bublin je cinka (ta co ma levelParity 0)
+                if ((b1 != b2) && (b1.levelParity == 0) && (b2.levelParity == 1)){
+                    changeNeeded = incidenceMatrix[i][j] - b1.thickness - b2.thickness;
+                }
+                
+                if (changeNeeded < r) {
+                    r = changeNeeded;
                 }
             }
         }

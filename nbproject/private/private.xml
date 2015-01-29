@@ -3,10 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/raf/git_veci/edmonds/src/edmonds/HungarianForest.java</file>
+            <file>file:/home/raf/git_veci/edmonds/src/edmonds/Dumbbell.java</file>
+            <file>file:/home/raf/git_veci/edmonds/src/edmonds/BlueBlossom.java</file>
+            <file>file:/home/raf/git_veci/edmonds/src/edmonds/Graph.java</file>
             <file>file:/home/raf/git_veci/edmonds/src/edmonds/Blossom.java</file>
+            <file>file:/home/raf/git_veci/edmonds/src/edmonds/Edge.java</file>
             <file>file:/home/raf/git_veci/edmonds/src/edmonds/HungarianTree.java</file>
+            <file>file:/home/raf/git_veci/edmonds/src/edmonds/TreeNode.java</file>
+            <file>file:/home/raf/git_veci/edmonds/src/edmonds/Variables.java</file>
             <file>file:/home/raf/git_veci/edmonds/src/edmonds/Edmonds.java</file>
+            <file>file:/home/raf/git_veci/edmonds/src/edmonds/GreenBlossom.java</file>
+            <file>file:/home/raf/git_veci/edmonds/src/edmonds/Vertex.java</file>
         </group>
     </open-files>
 </project-private>

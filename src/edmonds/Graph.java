@@ -28,9 +28,6 @@ public class Graph {
         
         for(int i = 0; i < vertexCount; i++){
             vertices.add(new Vertex(i));
-            
-            // vytvorime rovno modre bubliny velkosti 1 prisluchajuce jednotlivym vrcholom
-            vertices.get(i).addToBlossom(new Blossom(i));
         }
         
         // nastavime ceny hran na nekonecno
@@ -55,7 +52,9 @@ public class Graph {
                 Blossom b1 = vertices.get(i).getOutermostBlossom();
                 Blossom b2 = vertices.get(j).getOutermostBlossom();
                 
+                
                 // zmysel to ma riesit len pre dva rozne vonkajsie kvety na parnej urovni
+                // cinky maju uroven 0 (ani parna, ani neparna), cize pre tie to neriesime
                 if ((b1 != b2) && (b1.levelParity == 1) && (b2.levelParity == 1)){
                     int changeNeeded = incidenceMatrix[i][j] - b1.thickness - b2.thickness;
                     if (changeNeeded < r) {

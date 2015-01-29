@@ -5,19 +5,21 @@
  */
 package edmonds;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author raf
  */
-public class HungarianTree {
-    TreeNode root;
+public class Dumbbell extends Blossom{
+
+    int levelParity;
+    Blossom b1, b2;
     
-    public HungarianTree(TreeNode root){
-        this.root = root;
+    public Dumbbell(BlueBlossom b1, BlueBlossom b2) {
+        this.levelParity = 0;
+        this.b1 = b1;
+        this.b2 = b2;
     }
     
-    
-    public void zmena(int r){
-        root.zmena(r);
-    }
 }

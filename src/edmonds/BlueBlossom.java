@@ -5,24 +5,25 @@
  */
 package edmonds;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author raf
  */
-class Blossom {
+
+// one-vertex blossom
+public class BlueBlossom extends Blossom{
+
+    int id;
     
-    int thickness;
-    int levelParity;
+    public BlueBlossom(int id) {
+        this.id = id;
+        this.thickness = 0;
+        this.levelParity = 1; // parita volnej modrej bubliny je 1 (parna)
+    }
     
-    // rekurzivne vrati stopku bubliny
+    @Override
     public int getStopka(){
-        return -10;
+        return id;
     }
     
-    // sluzi na updatovanie hrubky kvetu
-    public void zmena(int r) {
-        thickness += r;
-    }
 }

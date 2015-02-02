@@ -71,7 +71,8 @@ public class Graph {
             }
         }
         
-        // teraz sa pozrieme na bubliny na neparnej urovni, ze o kolko ich potrebujeme splasnut, aby sa niektora dostala na 0
+        // teraz sa pozrieme na bubliny na neparnej urovni, ze o kolko ich potrebujeme splasnut,
+        // aby sa niektora dostala na 0
         for (int i = 0; i < vertexCount; i++){
             Blossom b = vertices.get(i).getOutermostBlossom();
             if (b.levelParity == -1){

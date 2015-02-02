@@ -15,9 +15,9 @@ public class TreeNode {
     TreeNode parent; // kto je jeho parent vramci madarskeho stromu
     ArrayList<TreeNode> children; // zoznam deti vramci madarskeho stromu
     Edge parentEdge; // hrana z grafu spajajuca kvet s otcovskym kvetom
-    GreenBlossom containedBlossom; // najvacsia zelena bublina vo vnutri nodu
+    Blossom containedBlossom; // najvacsia zelena bublina vo vnutri nodu
     
-    public TreeNode(GreenBlossom containedBlossom){
+    public TreeNode(Blossom containedBlossom){
         this.parent = null;
         this.children = new ArrayList<TreeNode>();
         this.parentEdge = null;

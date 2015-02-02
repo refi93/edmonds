@@ -15,6 +15,8 @@ class Blossom {
     
     double thickness;
     int levelParity;
+    Dumbbell dumbbellRef = null; // referencia na cinku, ak sa v nejakej nachadza
+    TreeNode treeNodeRef = null; // referencia na vrchol v madarskom strome, ak sa v nejakom nachadza
     
     // rekurzivne vrati stopku bubliny
     public int getStopka(){

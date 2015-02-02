@@ -33,5 +33,14 @@ public class GreenBlossom extends Blossom{
         return blossoms.get(0).getStopka();
     }
     
+    // sluzi na updatovanie hrubky kvetu
+    @Override
+    public void zmena(double r) {
+        thickness += r;
+        if (thickness == 0){
+            System.err.println("BUBLINE KLESLA HRUBKA NA 0!!!!! - DOIMPLEMENTUJ");
+        }
+    }
+    
     
 }

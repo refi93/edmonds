@@ -6,6 +6,7 @@
 package edmonds;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 
 /**
@@ -14,23 +15,28 @@ import java.util.Deque;
  */
 public class Vertex {
     int id;
-    Deque<Blossom> blossomStack; // stack bublin, do ktorych patri
+    ArrayList<Blossom> blossomStack; // stack bublin, do ktorych patri
     
     public Vertex(int id){
         this.id = id;
-        this.blossomStack = new ArrayDeque<Blossom>();
+        this.blossomStack = new ArrayList<Blossom>();
     }
     
     public void addToBlossom(Blossom b){
-        blossomStack.push(b);
+        blossomStack.add(b);
     }
     
     public void popOutermostBlossom(){
-        blossomStack.pop();
+        blossomStack.remove(blossomStack.size() - 1);
     }
     
     // vrati aktualnu bublinu pre vrchol
     public Blossom getOutermostBlossom(){
-        return blossomStack.getLast();
+        return blossomStack.get(blossomStack.size() - 1);
+    }
+    
+    // vrati n-tu najhlbsiu bublinu (pocinajuc 0)
+    public Blossom getNthOutermostBlossom(int level){
+        return blossomStack.get(blossomStack.size() - 1 - level);
     }
 }

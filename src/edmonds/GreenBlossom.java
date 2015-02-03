@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class GreenBlossom extends Blossom{
     
-    ArrayList<Blossom> blossoms; // zoznam bublin vnutri bubliny
+    ArrayList<Blossom> blossoms; // zoznam bublin vnutri bubliny, v tej prvej v poradi je vzdy stopka
     ArrayList<Edge> edgesBetweenBlossoms; // na i-tej pozicii je hrana medzi i a (i+1) % n
     
     public GreenBlossom(ArrayList<Blossom> blossoms, ArrayList<Edge> edgesBetweenBlossoms){
@@ -28,11 +28,6 @@ public class GreenBlossom extends Blossom{
         for(int i = 0; i < blossoms.size(); i++){
             this.blossoms.add(blossoms.get(i));
         }
-    }
-    
-    @Override
-    public Vertex getStopka(){
-        return blossoms.get(0).getStopka();
     }
     
     // sluzi na updatovanie hrubky kvetu
@@ -80,15 +75,22 @@ public class GreenBlossom extends Blossom{
         return ret;
     }
     
+    
+    // rekurzivne updatuje stopku bubliny tak, aby pasovala na danu hranu
     public void setStopkaByEdge(Edge e){
+        setStopkaByEdge(e, 1);
+    }
+    
+    // level je potrebny, aby sme sa pozerali na bublinu na spravnej urovni
+    private void setStopkaByEdge(Edge e, int level){
         int newStopkaIndex = 0;
         for(newStopkaIndex = 0;newStopkaIndex < this.blossoms.size(); newStopkaIndex++){
-            if ((e.u.getOutermostBlossom() == this) || (e.v.getOutermostBlossom() == this)){
+            if ((e.u.getNthOutermostBlossom(level) == this) || (e.v.getNthOutermostBlossom(level) == this)){
                 break;
             }
         }
-        // cyklicky posunieme nas arrayList blossomov o newStopkaIndex policok
-        // vytvorime si pomocne pole
+        // cyklicky posunieme nas arrayList blossomov a hran o newStopkaIndex policok
+        // vytvorime si pomocne pole, vykoname cyklicky posun a skopirujeme namiesto povodnych
         ArrayList<Blossom> newBlossomsOrder = new ArrayList<Blossom>();
         ArrayList<Edge> newEdgesBetweenBlossomsOrder = new ArrayList<Edge>();
         
@@ -98,6 +100,14 @@ public class GreenBlossom extends Blossom{
         
         for(int i = 0; i < newEdgesBetweenBlossomsOrder.size(); i++){
             newEdgesBetweenBlossomsOrder.add(edgesBetweenBlossoms.get((i + newStopkaIndex) % edgesBetweenBlossoms.size()));
+        }
+        
+        this.blossoms = newBlossomsOrder;
+        this.edgesBetweenBlossoms = newEdgesBetweenBlossomsOrder;
+        
+        // rekurzivne sa vnorime, aby sme updatovali stopku
+        if (this.blossoms.get(0) instanceof GreenBlossom){
+            ((GreenBlossom)this.blossoms.get(0)).setStopkaByEdge(e, level + 1);
         }
     }
     

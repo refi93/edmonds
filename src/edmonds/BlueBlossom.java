@@ -21,9 +21,4 @@ public class BlueBlossom extends Blossom{
         this.levelParity = 1; // parita volnej modrej bubliny je 1 (parna)
     }
     
-    @Override
-    public Vertex getStopka(){
-        return vertex;
-    }
-    
 }

@@ -18,11 +18,6 @@ class Blossom {
     Dumbbell dumbbellRef = null; // referencia na cinku, ak sa v nejakej nachadza
     TreeNode treeNodeRef = null; // referencia na vrchol v madarskom strome, ak sa v nejakom nachadza
     
-    // rekurzivne vrati stopku bubliny
-    public Vertex getStopka(){
-        return null;
-    }
-    
     // sluzi na updatovanie hrubky kvetu
     public void zmena(double r) {
         thickness += r;

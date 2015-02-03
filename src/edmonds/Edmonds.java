@@ -79,6 +79,7 @@ public class Edmonds {
                                 }
                                 parentEdgeBlossom = parentEdge.u.getOutermostBlossom();
                                 parentEdgeBlossomIndex = j;
+                                break;
                             }
                             else if (containedBlossoms.get(j) == parentEdge.v.getOutermostBlossom()){
                                 if (parentEdgeBlossom != null) {
@@ -86,6 +87,7 @@ public class Edmonds {
                                 }
                                 parentEdgeBlossom = parentEdge.v.getOutermostBlossom();
                                 parentEdgeBlossomIndex = j;
+                                break;
                             }
                         }
                         
@@ -106,6 +108,13 @@ public class Edmonds {
                             for(int j = 0; j < parentEdgeBlossomIndex; j++){
                                 edgePath.add(oldGreenBlossom.edgesBetweenBlossoms.get(j));
                             }
+                            
+                            // zo zvysnych bublin vyrobime cinky
+                            for (int j = parentEdgeBlossomIndex + 1; j < oldGreenBlossom.blossoms.size(); j++){
+                                if (j % 2 == 1){
+                                    dumbbells.add(new Dumbbell(oldGreenBlossom.blossoms.get(j), oldGreenBlossom.blossoms.get(j + 1), oldGreenBlossom.edgesBetweenBlossoms.get(j)));
+                                }
+                            }
                         }
                         // ak je parent edge na parnej pozicii ideme z opacnej strany kruznice od k po 0 vratane a otocime, aby sa s tym lahsie robilo potom
                         else {
@@ -118,6 +127,13 @@ public class Edmonds {
                             }
                             Collections.reverse(blossomPath);
                             Collections.reverse(edgePath);
+                            
+                            // zo zvysnych bublin vyrobime cinky
+                            for (int j = 1; j < parentEdgeBlossomIndex - 1; j++){
+                                if (j % 2 == 1){
+                                    dumbbells.add(new Dumbbell(oldGreenBlossom.blossoms.get(j), oldGreenBlossom.blossoms.get(j + 1), oldGreenBlossom.edgesBetweenBlossoms.get(j)));
+                                }
+                            }
                         }
                         
                         // teraz ideme pridat blossomPath do madarskeho stromu
@@ -128,6 +144,7 @@ public class Edmonds {
                             TreeNode newNode = new TreeNode(blossomPath.get(j));
                             newNode.treeRef = currentTree;
                             blossomPath.get(j).treeNodeRef = newNode;
+                            blossomPath.get(j).levelParity = -1 + 2 * (j % 2); // nastavime spravnu paritu kvetom na ceste v strome
                             nodePath.add(newNode);
                         }
                         
@@ -158,6 +175,7 @@ public class Edmonds {
                             nodePath.get(j).parentEdge = edgePath.get(j);
                         }
                         nodePath.get(nodePath.size() - 1).parentEdge = oldNode.parentEdge;
+                        
                     }
                     else {
                         System.err.println("Ina ako zelena bublina na neparnej urovni ma hrubku 0");
@@ -190,23 +208,44 @@ public class Edmonds {
                             dumb.b1.dumbbellRef = null;
                             dumb.b2.dumbbellRef = null;
                             dumbbells.remove(dumb);
+                            // TODO - TA CINKA SA TAM PRIPAJA UPLNE CUDNE
                             
                             // vytvorime novy vrchol madarskeho stromu
-                            TreeNode newNode = new TreeNode(blossom2);
-                            // novy vrchol v strome dostane referenciu na strom, na ktory bol pripojeny
-                            newNode.treeRef = blossom1.treeNodeRef.treeRef;
+                            TreeNode newNodeFirst;
+                            TreeNode newNodeSecond;
                             
-                            // kvet dostane referenciu na node v strome
-                            blossom2.treeNodeRef = newNode;
+                            // napasujeme cinku, resp. nove nody na kvet, kde sa naplnila hrana
+                            if (dumb.b1 == blossom2){
+                                newNodeFirst = new TreeNode(dumb.b1);
+                                dumb.b1.levelParity = -1;
+                                newNodeSecond = new TreeNode(dumb.b2);
+                                dumb.b2.levelParity = 1;
+                            }
+                            else {
+                                newNodeFirst = new TreeNode(dumb.b2);
+                                dumb.b2.levelParity = -1;
+                                newNodeSecond = new TreeNode(dumb.b1);
+                                dumb.b2.levelParity = 1;
+                            }
+                            
+                            // nastavime deti pre vrchol cinky susediaci s plnou hranou
+                            newNodeFirst.children.add(newNodeSecond);
+                            // a rodica a hranu pre ten druhy vrchol cinky
+                            newNodeSecond.parent = newNodeFirst;
+                            newNodeSecond.parentEdge = dumb.connectingEdge;
+                            
+                            // nove vrcholy v strome dostanu referenciu na strom, na ktory boli pripojene
+                            newNodeFirst.treeRef = blossom1.treeNodeRef.treeRef;
+                            newNodeSecond.treeRef = newNodeFirst.treeRef;
                             
                             // pridame novy vrchol ako syna kvetu blossom1
-                            blossom1.treeNodeRef.children.add(newNode);
+                            blossom1.treeNodeRef.children.add(newNodeFirst);
                             
-                            // nastavime blossom1 ako otca vrcholu blossom2
-                            blossom2.treeNodeRef.parent = blossom1.treeNodeRef;
+                            // nastavime blossom1 ako otca prveho vrcholu z cinky
+                            newNodeFirst.parent = blossom1.treeNodeRef;
                             
-                            // nastavime otcovsku hranu pre blossom2
-                            blossom2.treeNodeRef.parentEdge = fullEdge;
+                            // nastavime otcovsku hranu pre prvy z kvetov cinky
+                            newNodeFirst.parentEdge = fullEdge;
                         }
                         
                         // (P3) ak sa naplni hrana medzi dvomi kvetmi v strome (stat sa to moze len na parnej urovni, lebo len tam je kladny prirastok

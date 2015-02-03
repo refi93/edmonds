@@ -60,7 +60,7 @@ public class Graph {
                 }
                 
                 // ak jedna z bublin je cinka (ta co ma levelParity 0)
-                if ((b1.levelParity == 0) && (b2.levelParity == 1)){
+                else if ((b1.levelParity == 0) && (b2.levelParity == 1)){
                     changeNeeded = incidenceMatrix[i][j] - b1.thickness - b2.thickness;
                 }
                 

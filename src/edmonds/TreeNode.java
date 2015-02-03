@@ -24,6 +24,7 @@ public class TreeNode {
         this.children = new ArrayList<TreeNode>();
         this.parentEdge = null;
         this.containedBlossom = containedBlossom;
+        this.containedBlossom.treeNodeRef = this; // upravime vrcholu referenciu na node
         this.treeRef = null;
     }
     

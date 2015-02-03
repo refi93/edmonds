@@ -6,7 +6,6 @@
 package edmonds;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -296,33 +295,25 @@ public class Edmonds {
                         
                         // (P4) ak sa naplni hrana medzi dvomi roznymi stromami, oba stromy sa rozpadnu na cinky
                         else if (blossom1.treeNodeRef.treeRef != blossom2.treeNodeRef.treeRef){
+                            HungarianTree tree1 = blossom1.treeNodeRef.treeRef;
                             ArrayList<TreeNode> nodePath1 = blossom1.treeNodeRef.getAncestors();
                             ArrayList<Edge> edgePath1 = blossom1.treeNodeRef.getAncestorEdges();
                             
+                            HungarianTree tree2 = blossom2.treeNodeRef.treeRef;
                             ArrayList<TreeNode> nodePath2 = blossom2.treeNodeRef.getAncestors();
                             ArrayList<Edge> edgePath2 = blossom2.treeNodeRef.getAncestorEdges();
                             
-                            // teraz vyrobime pozdlz cesty cinky
+                            // pridame cinky na ktore sa rozpadli oba stromy, okrem tej cinky, co ma tu naplnenu hranu
+                            dumbbells.addAll(tree1.breakToDumbbells(new HashSet<TreeNode>(nodePath1)));
+                            dumbbells.addAll(tree2.breakToDumbbells(new HashSet<TreeNode>(nodePath2)));
                             
-                            // pre cestu v prvom strome
-                            for(int k = 0; k < nodePath1.size() - 1; k++){
-                                if (k % 2 == 0){
-                                    Dumbbell dumb = new Dumbbell(nodePath1.get(k).containedBlossom, nodePath1.get(k + 1).containedBlossom, edgePath1.get(k));
-                                    dumbbells.add(dumb);
-                                }
-                            }
-                            
-                            // pre cestu v druhom strome
-                            for(int k = 0; k < nodePath2.size() - 1; k++){
-                                if (k % 2 == 0){
-                                    Dumbbell dumb = new Dumbbell(nodePath2.get(k).containedBlossom, nodePath2.get(k + 1).containedBlossom, edgePath2.get(k));
-                                    dumbbells.add(dumb);
-                                }
-                            }
-                            
-                            // a este cinku, co vznike medzi stromami
+                            // a este pridame cinku, co vznike naplnenou hranou medzi stromami
                             Dumbbell dumb = new Dumbbell(nodePath1.get(nodePath1.size() - 1).containedBlossom, nodePath2.get(nodePath2.size() - 1).containedBlossom, fullEdge);
                             dumbbells.add(dumb);
+                            
+                            // odstranime stromy z lesa, kedze sa uz rozpadli na cinky
+                            hungarianForest.remove(tree1);
+                            hungarianForest.remove(tree2);
                         }
                     }
                 }

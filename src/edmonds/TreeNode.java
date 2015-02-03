@@ -6,6 +6,7 @@
 package edmonds;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  *
@@ -41,6 +42,32 @@ public class TreeNode {
         ret.add(this);
         
         return ret;
+    }
+    
+    public ArrayList<Dumbbell> breakToDumbbells(HashSet<TreeNode> alternatingPath){
+        ArrayList<Dumbbell> ret = new ArrayList<Dumbbell>();
+        breakToDumbbells(alternatingPath, ret, false);
+        return ret;
+    }
+    
+    private void breakToDumbbells(HashSet<TreeNode> alternatingPath, ArrayList<Dumbbell> dumbbells, boolean makeDumbbell){
+        if (makeDumbbell == true){
+            dumbbells.add(new Dumbbell(this.containedBlossom, parent.containedBlossom, parentEdge));
+        }
+        
+        for(int i = 0; i < children.size(); i++){
+            if (alternatingPath.contains(this)){
+                if (alternatingPath.contains(children.get(i))){
+                    breakToDumbbells(alternatingPath, dumbbells, !makeDumbbell);
+                }
+                else {
+                    breakToDumbbells(alternatingPath, dumbbells, makeDumbbell);
+                }
+            }
+            else{
+                breakToDumbbells(alternatingPath, dumbbells, !makeDumbbell);
+            }
+        }
     }
     
     private void getAncestors(ArrayList<TreeNode> ancestors){

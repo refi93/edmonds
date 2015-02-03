@@ -82,8 +82,9 @@ public class TreeNode {
     public ArrayList<Edge> getAncestorEdges(){
         ArrayList<Edge> ret = new ArrayList<Edge>();
         getAncestorEdges(ret);
-        ret.add(this.parentEdge);
-        
+        if (this.parentEdge != null){
+            ret.add(this.parentEdge);
+        }
         return ret;
     }
     

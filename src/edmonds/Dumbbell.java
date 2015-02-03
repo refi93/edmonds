@@ -22,11 +22,12 @@ public class Dumbbell {
         this.b1 = b1;
         b1.levelParity = 0;
         b1.dumbbellRef = this;
+        b1.treeNodeRef = null;
         
         this.b2 = b2;
         b2.levelParity = 0;
         b2.dumbbellRef = this;
-        
+        b2.treeNodeRef = null;
         // este upravime stopky, aby sedeli (mali by byt pri hrane, ktora spaja cinky)
         if (b1 instanceof GreenBlossom){
             GreenBlossom gb1 = (GreenBlossom) b1;

@@ -16,11 +16,16 @@ import java.util.List;
  */
 public class Edmonds {
     public static void main(String[] args){
-        int n = 10;
+        int n = 4;
         
         HashSet<Dumbbell> dumbbells = new HashSet<Dumbbell>(); // cinky
         ArrayList<HungarianTree> hungarianForest = new ArrayList<HungarianTree>(); // madarsky les
         Graph myGraph = new Graph(n);
+        
+        myGraph.addEdge(0, 1, 10);
+        myGraph.addEdge(1, 2, 114);
+        myGraph.addEdge(2, 3, 21);
+        //myGraph.addEdge(3, 0, 10);
         
         // vrcholy pridame do modrych bublin a vytvorime pre kazdu z nich novy madarsky strom a pridame do lesa
         for(int i = 0; i < n; i++){
@@ -187,6 +192,9 @@ public class Edmonds {
             // teraz overime pripady s naplnenim hrany
             for (int i = 0; i < myGraph.vertexCount; i++){
                 for (int j = 0; j < myGraph.vertexCount; j++){
+                    if (i == j){
+                        continue;
+                    }
                     Blossom blossom1 = myGraph.vertices.get(i).getOutermostBlossom();
                     Blossom blossom2 = myGraph.vertices.get(j).getOutermostBlossom();
                     
@@ -249,7 +257,7 @@ public class Edmonds {
                         }
                         
                         // (P3) ak sa naplni hrana medzi dvomi kvetmi v strome (stat sa to moze len na parnej urovni, lebo len tam je kladny prirastok
-                        else if (blossom1.treeNodeRef.treeRef == blossom2.treeNodeRef.treeRef){
+                        else if (blossom1.treeNodeRef != null && blossom2.treeNodeRef != null && blossom1.treeNodeRef.treeRef == blossom2.treeNodeRef.treeRef){
                             // zoznam predchodcov vrcholu s prislusnymi hranami
                             ArrayList<TreeNode> ancestors1 = blossom1.treeNodeRef.getAncestors();
                             ArrayList<Edge> ancestorEdges1 = blossom1.treeNodeRef.getAncestorEdges();
@@ -258,14 +266,13 @@ public class Edmonds {
                             ArrayList<Edge> ancestorEdges2 = blossom2.treeNodeRef.getAncestorEdges();
                             
                             //hladanie najblizsieho spolocneho predka (ideme od korena stromu)
-                            int k;
-                            for(k = 0; ancestors1.get(k) == ancestors2.get(k); k++){
-                                
+                            int nearestCommonAncestorId;
+                            for(nearestCommonAncestorId = 0; ancestors1.get(nearestCommonAncestorId) == ancestors2.get(nearestCommonAncestorId); nearestCommonAncestorId++){ 
                             }
-                            // k je teraz index prveho nodu, kde sa postupnost predkov od korena lisi
-                            // k - 1 je tym padom index posledneho spolocneho predka
-                            List<TreeNode> nodePath1 = ancestors1.subList(k - 1, ancestors1.size());
-                            List<TreeNode> nodePath2 = ancestors2.subList(k , ancestors2.size());
+                            nearestCommonAncestorId--;
+                            
+                            List<TreeNode> nodePath1 = ancestors1.subList(nearestCommonAncestorId, ancestors1.size());
+                            List<TreeNode> nodePath2 = ancestors2.subList(nearestCommonAncestorId + 1 , ancestors2.size());
                             Collections.reverse(nodePath2);
                             
                             // vytvorime cestu od spolocneho predka (novej stopky) po nasledujuci vrchol v kruznici, ktora bude v novej zelenej bubline
@@ -280,8 +287,8 @@ public class Edmonds {
                             }
                             
                             // teraz spojime hrany do kruhu
-                            List<Edge> edgePath1 = ancestorEdges1.subList(k, ancestorEdges1.size());
-                            List<Edge> edgePath2 = ancestorEdges2.subList(k, ancestorEdges2.size());
+                            List<Edge> edgePath1 = ancestorEdges1.subList(nearestCommonAncestorId, ancestorEdges1.size());
+                            List<Edge> edgePath2 = ancestorEdges2.subList(nearestCommonAncestorId, ancestorEdges2.size());
                             Collections.reverse(edgePath2);
                             // spojime ich do jedneho zoznamu - prva hrana ide zo stopky, posledna ide z poslednej bubliny do stopky
                             ArrayList<Edge> oddCycleEdges = new ArrayList<Edge>(edgePath1);
@@ -330,7 +337,7 @@ public class Edmonds {
                         }
                         
                         // (P4) ak sa naplni hrana medzi dvomi roznymi stromami, oba stromy sa rozpadnu na cinky
-                        else if (blossom1.treeNodeRef.treeRef != blossom2.treeNodeRef.treeRef){
+                        else if (blossom1.treeNodeRef != null && blossom2.treeNodeRef != null && blossom1.treeNodeRef.treeRef != blossom2.treeNodeRef.treeRef){
                             HungarianTree tree1 = blossom1.treeNodeRef.treeRef;
                             ArrayList<TreeNode> nodePath1 = blossom1.treeNodeRef.getAncestors();
                             ArrayList<Edge> edgePath1 = blossom1.treeNodeRef.getAncestorEdges();

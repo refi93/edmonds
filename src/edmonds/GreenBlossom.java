@@ -71,7 +71,6 @@ public class GreenBlossom extends Blossom{
         for (int i = 0; i < blossoms.size(); i++){
             ret += blossoms.get(i).getMatchingPrice();
         }
-        
         return ret;
     }
     

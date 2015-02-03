@@ -40,8 +40,6 @@ public class TreeNode {
     public ArrayList<TreeNode> getAncestors(){
         ArrayList<TreeNode> ret = new ArrayList<TreeNode>();
         getAncestors(ret);
-        ret.add(this);
-        
         return ret;
     }
     
@@ -73,9 +71,9 @@ public class TreeNode {
     
     private void getAncestors(ArrayList<TreeNode> ancestors){
         if (this.parent != null){
-            getAncestors(ancestors);
-            ancestors.add(this.parent);
+            this.parent.getAncestors(ancestors);
         }
+        ancestors.add(this);
     }
     
     // vrati hrany na ceste od korena po node
@@ -90,7 +88,7 @@ public class TreeNode {
     
     private void getAncestorEdges(ArrayList<Edge> ancestorEdges){
         if (this.parentEdge != null){
-            getAncestorEdges(ancestorEdges);
+            this.parent.getAncestorEdges(ancestorEdges);
             ancestorEdges.add(this.parentEdge);
         }
     }

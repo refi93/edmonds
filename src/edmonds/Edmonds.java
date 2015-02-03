@@ -25,7 +25,7 @@ public class Edmonds {
         myGraph.addEdge(0, 1, 10);
         myGraph.addEdge(1, 2, 114);
         myGraph.addEdge(2, 3, 21);
-        //myGraph.addEdge(3, 0, 10);
+        myGraph.addEdge(3, 0, 10);
         
         // vrcholy pridame do modrych bublin a vytvorime pre kazdu z nich novy madarsky strom a pridame do lesa
         for(int i = 0; i < n; i++){

@@ -65,4 +65,19 @@ public class GreenBlossom extends Blossom{
         }
     }
     
+    @Override
+    public int getMatchingPrice(){
+        int ret = 0;
+        for(int i = 0; i < edgesBetweenBlossoms.size(); i++){
+            if (i % 2 == 1){
+                ret += edgesBetweenBlossoms.get(i).price;
+            }
+        }
+        for (int i = 0; i < blossoms.size(); i++){
+            ret += blossoms.get(i).getMatchingPrice();
+        }
+        
+        return ret;
+    }
+    
 }

@@ -27,4 +27,9 @@ class Blossom {
     public void zmena(double r) {
         thickness += r;
     }
+    
+    // vrati cenu parovania vo vnutri bubliny
+    public int getMatchingPrice(){
+        return 0;
+    }
 }

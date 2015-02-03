@@ -292,12 +292,22 @@ public class Edmonds {
                             
                             // parent edge stopkoveho nodu je odteraz parent edge noveho nodu
                             newNode.parentEdge = oddCycleNodes.get(0).parentEdge;
-                        } 
+                        }
+                        
+                        // (P4) ak sa naplni hrana medzi dvomi roznymi stromami, oba stromy sa rozpadnu na cinky
+                        else if (blossom1.treeNodeRef.treeRef != blossom2.treeNodeRef.treeRef){
+                            
+                        }
                     }
                 }
             }
-            
-            //TODO fixy na stromoch
         }
+        
+        int matchingPrice = 0;
+        for(Dumbbell dumb : dumbbells){
+            matchingPrice += dumb.getTotalMatchingPrice();
+        }
+        
+        System.out.println("Minimal matching price is " + matchingPrice);
     }
 }

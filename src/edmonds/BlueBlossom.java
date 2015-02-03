@@ -19,6 +19,7 @@ public class BlueBlossom extends Blossom{
         this.vertex = vertex;
         this.thickness = 0;
         this.levelParity = 1; // parita volnej modrej bubliny je 1 (parna)
+        v.addToBlossom(this);
     }
     
 }

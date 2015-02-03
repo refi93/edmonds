@@ -29,11 +29,8 @@ public class Edmonds {
             BlueBlossom b = new BlueBlossom(v);
             TreeNode node = new TreeNode(b);
             HungarianTree t = new HungarianTree(node);
-            node.treeRef = t; // update referencie na strom pre node
             
             hungarianForest.add(t);
-            
-            v.addToBlossom(b);
         }
         
         // dokym nemame parovanie

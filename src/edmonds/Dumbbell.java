@@ -21,9 +21,11 @@ public class Dumbbell {
         // zmena(r), cize nema zmysel riesit paritu
         this.b1 = b1;
         b1.levelParity = 0;
+        b1.dumbbellRef = this;
         
         this.b2 = b2;
         b2.levelParity = 0;
+        b2.dumbbellRef = this;
         
         // este upravime stopky, aby sedeli (mali by byt pri hrane, ktora spaja cinky)
         if (b1 instanceof GreenBlossom){

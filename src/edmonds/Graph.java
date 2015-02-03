@@ -46,7 +46,7 @@ public class Graph {
     public double getR(){
         double r = Variables.INFTY;
         
-        // najprv overime, ake r treba na naplnenie niektorej hrany
+        // najprv overime, ake r treba na naplnenie niektorej hrany medzi bublinami pripadne cinkami
         for (int i = 0; i < vertexCount; i++){
             for(int j = 0; j < vertexCount; j++){
                 Blossom b1 = vertices.get(i).getOutermostBlossom();
@@ -55,13 +55,12 @@ public class Graph {
                 double changeNeeded = r;
                 // zmysel to ma riesit len pre dva rozne vonkajsie kvety na parnej urovni
                 // cinky maju uroven 0 (ani parna, ani neparna), cize pre tie to neriesime
-                if ((b1 != b2) && (b1.levelParity == 1) && (b2.levelParity == 1)){  
-                    //TODO - co ak cena hrany neni parna????
+                if ((b1 != b2) && (b1.levelParity == 1) && (b2.levelParity == 1)){
                     changeNeeded = (incidenceMatrix[i][j] - b1.thickness - b2.thickness) / 2;
                 }
                 
                 // ak jedna z bublin je cinka (ta co ma levelParity 0)
-                if ((b1 != b2) && (b1.levelParity == 0) && (b2.levelParity == 1)){
+                if ((b1.levelParity == 0) && (b2.levelParity == 1)){
                     changeNeeded = incidenceMatrix[i][j] - b1.thickness - b2.thickness;
                 }
                 

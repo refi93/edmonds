@@ -25,6 +25,17 @@ public class Dumbbell {
         this.b2 = b2;
         b2.levelParity = 0;
         
+        // este upravime stopky, aby sedeli (mali by byt pri hrane, ktora spaja cinky)
+        if (b1 instanceof GreenBlossom){
+            GreenBlossom gb1 = (GreenBlossom) b1;
+            gb1.setStopkaByEdge(e);
+        }
+        
+        if (b2 instanceof GreenBlossom){
+            GreenBlossom gb2 = (GreenBlossom) b2;
+            gb2.setStopkaByEdge(e);
+        }
+        
         connectingEdge = e;
     }
     

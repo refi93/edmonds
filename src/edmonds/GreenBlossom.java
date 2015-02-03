@@ -80,4 +80,25 @@ public class GreenBlossom extends Blossom{
         return ret;
     }
     
+    public void setStopkaByEdge(Edge e){
+        int newStopkaIndex = 0;
+        for(newStopkaIndex = 0;newStopkaIndex < this.blossoms.size(); newStopkaIndex++){
+            if ((e.u.getOutermostBlossom() == this) || (e.v.getOutermostBlossom() == this)){
+                break;
+            }
+        }
+        // cyklicky posunieme nas arrayList blossomov o newStopkaIndex policok
+        // vytvorime si pomocne pole
+        ArrayList<Blossom> newBlossomsOrder = new ArrayList<Blossom>();
+        ArrayList<Edge> newEdgesBetweenBlossomsOrder = new ArrayList<Edge>();
+        
+        for(int i = 0; i < blossoms.size();i++){
+            newBlossomsOrder.add(blossoms.get((i + newStopkaIndex) % blossoms.size()));
+        }
+        
+        for(int i = 0; i < newEdgesBetweenBlossomsOrder.size(); i++){
+            newEdgesBetweenBlossomsOrder.add(edgesBetweenBlossoms.get((i + newStopkaIndex) % edgesBetweenBlossoms.size()));
+        }
+    }
+    
 }

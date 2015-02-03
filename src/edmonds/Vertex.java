@@ -25,7 +25,7 @@ public class Vertex {
         blossomStack.push(b);
     }
     
-    public void popOutermostBlossom(Blossom b){
+    public void popOutermostBlossom(){
         blossomStack.pop();
     }
     

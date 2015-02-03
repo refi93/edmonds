@@ -49,4 +49,20 @@ public class TreeNode {
             ancestors.add(this.parent);
         }
     }
+    
+    // vrati hrany na ceste od korena po vrchol
+    public ArrayList<Edge> getAncestorEdges(){
+        ArrayList<Edge> ret = new ArrayList<Edge>();
+        getAncestorEdges(ret);
+        ret.add(this.parentEdge);
+        
+        return ret;
+    }
+    
+    private void getAncestorEdges(ArrayList<Edge> ancestorEdges){
+        if (this.parentEdge != null){
+            getAncestorEdges(ancestorEdges);
+            ancestorEdges.add(this.parentEdge);
+        }
+    }
 }

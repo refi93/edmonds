@@ -14,10 +14,12 @@ import java.util.ArrayList;
 public class GreenBlossom extends Blossom{
     
     ArrayList<Blossom> blossoms; // zoznam bublin vnutri bubliny
+    ArrayList<Edge> edgesBetweenBlossoms; // na i-tej pozicii je hrana medzi i a (i+1) % n
     
-    public GreenBlossom(ArrayList<Blossom> blossoms){
+    public GreenBlossom(ArrayList<Blossom> blossoms, ArrayList<Edge> edgesBetweenBlossoms){
         
-        this.blossoms = new ArrayList<Blossom>();
+        this.blossoms = blossoms;
+        this.edgesBetweenBlossoms = edgesBetweenBlossoms;
         
         if (blossoms.size() % 2 != 1){
             System.err.println("NIEKTO CPE DO BLOSSOMU PARNU KRUZNICU MARHA");
@@ -29,7 +31,7 @@ public class GreenBlossom extends Blossom{
     }
     
     @Override
-    public int getStopka(){
+    public Vertex getStopka(){
         return blossoms.get(0).getStopka();
     }
     
@@ -42,5 +44,25 @@ public class GreenBlossom extends Blossom{
         }
     }
     
+    // vrati zoznam vrcholov vo vnutri bubliny
+    public ArrayList<Vertex> getInnerVertices(){
+        ArrayList<Vertex> ret = new ArrayList<Vertex>();
+        getInnerVertices(ret);
+        return ret;
+    }
+    
+    private void getInnerVertices(ArrayList<Vertex> vertexList){
+        for (int i = 0; i < blossoms.size(); i++) {
+            if (blossoms.get(i) instanceof BlueBlossom){
+                vertexList.add(((BlueBlossom)blossoms.get(i)).vertex);
+            }
+            else if (blossoms.get(i) instanceof GreenBlossom) {
+                ((GreenBlossom)blossoms.get(i)).getInnerVertices(vertexList);
+            }
+            else {
+                System.err.println("getInnerVertices: ani zeleny ani modry blossom, to je cudne");
+            }
+        }
+    }
     
 }

@@ -21,25 +21,25 @@ public class Edmonds {
         
         HashSet<Dumbbell> dumbbells = new HashSet<Dumbbell>(); // cinky
         ArrayList<HungarianTree> hungarianForest = new ArrayList<HungarianTree>(); // madarsky les
-        ArrayList<BlueBlossom> freeBlossoms = new ArrayList<BlueBlossom>(); // volne modre kvety
         Graph myGraph = new Graph(n);
         
-        // vrcholy pridame do modrych bublin a zaznacime si tieto bubliny do mnoziny volnych bublin
+        // vrcholy pridame do modrych bublin a vytvorime pre kazdu z nich novy madarsky strom a pridame do lesa
         for(int i = 0; i < n; i++){
-            BlueBlossom b = new BlueBlossom(i);
+            Vertex v = myGraph.vertices.get(i);
             
-            freeBlossoms.add(b);
-            myGraph.vertices.get(i).addToBlossom(b);
+            BlueBlossom b = new BlueBlossom(v);
+            TreeNode node = new TreeNode(b);
+            HungarianTree t = new HungarianTree(node);
+            node.treeRef = t; // update referencie na strom pre node
+            
+            hungarianForest.add(t);
+            
+            v.addToBlossom(b);
         }
         
         // dokym nemame parovanie
-        while (dumbbells.size() < n/2){
+        while (hungarianForest.size() != 0){
             double r = myGraph.getR();
-            
-            // zmenime naboj vo volnych (modrych) bublinach
-            for(int i = 0; i < freeBlossoms.size(); i++){
-                freeBlossoms.get(i).zmena(r);
-            }
             
             // zmenime naboj v stromoch madarskeho lesa
             for (int i = 0;i < hungarianForest.size(); i++){
@@ -49,6 +49,128 @@ public class Edmonds {
             
             
             // fixy na stromoch
+            for (int i = 0; i < myGraph.vertexCount; i++){
+                Blossom blossom = myGraph.vertices.get(i).getOutermostBlossom();
+                // (P1) zelenej bubline na neparnej urovni klesol naboj na 0
+                if (blossom.levelParity == -1 && blossom.thickness == 0){
+                    
+                    // overime, ze skutocne ide o zelenu bublinu
+                    if (blossom instanceof GreenBlossom){
+                        GreenBlossom oldGreenBlossom = (GreenBlossom) blossom;
+                        TreeNode oldNode = oldGreenBlossom.treeNodeRef;
+                        HungarianTree currentTree = oldNode.treeRef;
+                        ArrayList<Blossom> containedBlossoms = oldGreenBlossom.blossoms;
+                        ArrayList<Vertex> innerVertices = oldGreenBlossom.getInnerVertices();
+                        // overime, ze ma skutocne jedno dieta
+                        if (oldNode.children.size() != 1){
+                            System.err.println("Vrchol na neparnej urovni nema jedneho syna, problem");
+                        }
+                        
+                        // ideme odstranovat z vrcholov referenciu na bublinu, ktora prave splasla
+                        for (int j = 0; j < innerVertices.size(); j++){
+                            innerVertices.get(j).popOutermostBlossom();
+                        }
+                        
+                        // ideme zistit, ktorej bubline vo vnutri tej splasnutej prisluchala odchadzajuca hrana
+                        Edge parentEdge = oldGreenBlossom.treeNodeRef.parentEdge;
+                        Blossom parentEdgeBlossom = null; // bublina obsahujuca parent edge
+                        int parentEdgeBlossomIndex = -1; // index bubliny obsahujucej parent edge
+                        
+                        for(int j = 0; j < containedBlossoms.size(); j++){
+                            if (containedBlossoms.get(j) == parentEdge.u.getOutermostBlossom()){
+                                if (parentEdgeBlossom != null) {
+                                    System.err.println("z dvoch bublin odchadza hrana do otca, to je pruser");
+                                }
+                                parentEdgeBlossom = parentEdge.u.getOutermostBlossom();
+                                parentEdgeBlossomIndex = j;
+                            }
+                            else if (containedBlossoms.get(j) == parentEdge.v.getOutermostBlossom()){
+                                if (parentEdgeBlossom != null) {
+                                    System.err.println("z dvoch bublin odchadza hrana do otca, to je pruser");
+                                }
+                                parentEdgeBlossom = parentEdge.v.getOutermostBlossom();
+                                parentEdgeBlossomIndex = j;
+                            }
+                        }
+                        
+                        if (parentEdgeBlossomIndex == -1) {
+                            System.err.println("nenasla sa parentEdge bublina - pruser");
+                        }
+                        
+                        ArrayList<Blossom> blossomPath = new ArrayList<Blossom>();
+                        ArrayList<Edge> edgePath = new ArrayList<Edge>();
+                        
+                        // ak je parent edge blossom na neparnej pozicii (cislujeme od 0, teda 0 je neparna pre nase ucely)
+                        // ideme od 0 po k vratane
+                        if (parentEdgeBlossomIndex %2 == 0){
+                            for(int j = 0; j <= parentEdgeBlossomIndex; j++){
+                                blossomPath.add(oldGreenBlossom.blossoms.get(j));
+                            }
+                            
+                            for(int j = 0; j < parentEdgeBlossomIndex; j++){
+                                edgePath.add(oldGreenBlossom.edgesBetweenBlossoms.get(j));
+                            }
+                        }
+                        // ak je parent edge na parnej pozicii ideme z opacnej strany kruznice od k po 0 vratane a otocime, aby sa s tym lahsie robilo potom
+                        else {
+                            for(int j = parentEdgeBlossomIndex; j <= containedBlossoms.size(); j++){
+                                blossomPath.add(oldGreenBlossom.blossoms.get(j % containedBlossoms.size()));
+                            }
+                            
+                            for(int j = parentEdgeBlossomIndex; j < containedBlossoms.size(); j++){
+                                edgePath.add(oldGreenBlossom.edgesBetweenBlossoms.get(j));
+                            }
+                            Collections.reverse(blossomPath);
+                            Collections.reverse(edgePath);
+                        }
+                        
+                        // teraz ideme pridat blossomPath do madarskeho stromu
+                        
+                        // najprv teda vytvorime pre kazdy z blossomov novy node 
+                        ArrayList<TreeNode> nodePath = new ArrayList<TreeNode>();
+                        for(int j = 0; j < blossomPath.size(); j++){
+                            TreeNode newNode = new TreeNode(blossomPath.get(j));
+                            newNode.treeRef = currentTree;
+                            blossomPath.get(j).treeNodeRef = newNode;
+                            nodePath.add(newNode);
+                        }
+                        
+                        // najprv nastavime parent node pre node tesne pred prvou bublinou na ceste
+                        oldNode.children.get(0).parent = nodePath.get(0);
+                        // nastavime ostatnym novym nodom parenta
+                        for(int j = 0; j < nodePath.size() - 1; j++){
+                            nodePath.get(j).parent = nodePath.get(j + 1);
+                        }
+                        // napokon nastavime parenta poslednemu nodu na ceste (zdedi ho po splasnutej bubline)
+                        nodePath.get(nodePath.size() - 1).parent = oldNode.parent;
+                        
+                        // nastavime novym nodom childa
+                        // prvy node na ceste zdedi dieta po splasnutej bubline
+                        nodePath.get(0).children.add(oldNode.children.get(0));
+                        // child pre ostatne nody
+                        for(int j = 1; j < nodePath.size(); j++){
+                            nodePath.get(j).children.add(nodePath.get(j - 1));
+                        }
+                        // upravime childov pre prvy node nad cestou
+                        oldNode.parent.children.remove(oldNode); // odstranime stareho childa
+                        oldNode.parent.children.add(nodePath.get(nodePath.size() - 1)); // nahradime novym
+                        
+                        // nastavime nodom na ceste a pred nou parentEdge
+                        // prvemu vrcholu pod cestou parent edge menit netreba, ostane ten isty
+                        // ideme nastavit tie ostatne okrem posledneho, tomu to spravime dodatocne
+                        for(int j = 0; j < nodePath.size() - 1; j++){
+                            nodePath.get(j).parentEdge = edgePath.get(j);
+                        }
+                        nodePath.get(nodePath.size() - 1).parentEdge = oldNode.parentEdge;
+                    }
+                    else {
+                        System.err.println("Ina ako zelena bublina na neparnej urovni ma hrubku 0");
+                    }
+                    
+                }
+            }
+            
+            // teraz overime pripady s naplnenim hrany
             for (int i = 0; i < myGraph.vertexCount; i++){
                 for (int j = 0; j < myGraph.vertexCount; j++){
                     Blossom blossom1 = myGraph.vertices.get(i).getOutermostBlossom();
@@ -62,8 +184,9 @@ public class Edmonds {
                     
                     // ak sa nejaka hrana naplnila
                     if (blossom1.thickness + blossom2.thickness == edgeCapacity){
-                        
-                        // ak sa naplnila hrana medzi kvetom na parnej urovni a cinkou
+                        // naplnena hrana
+                        Edge fullEdge = new Edge(myGraph.vertices.get(i), myGraph.vertices.get(j), (int)edgeCapacity);
+                        // (P2) ak sa naplnila hrana medzi kvetom na parnej urovni a cinkou
                         if (blossom1.levelParity == 1 && blossom2.levelParity == 0){
                             
                             // odstranime cinku
@@ -87,13 +210,17 @@ public class Edmonds {
                             blossom2.treeNodeRef.parent = blossom1.treeNodeRef;
                             
                             // nastavime otcovsku hranu pre blossom2
-                            blossom2.treeNodeRef.parentEdge = new Edge (i, j, myGraph.incidenceMatrix[i][j]);
+                            blossom2.treeNodeRef.parentEdge = fullEdge;
                         }
                         
-                        // ak sa naplni hrana medzi dvomi kvetmi v strome (stat sa to moze len na parnej urovni, lebo len tam je kladny prirastok
+                        // (P3) ak sa naplni hrana medzi dvomi kvetmi v strome (stat sa to moze len na parnej urovni, lebo len tam je kladny prirastok
                         else if (blossom1.treeNodeRef.treeRef == blossom2.treeNodeRef.treeRef){
+                            // zoznam predchodcov vrcholu s prislusnymi hranami
                             ArrayList<TreeNode> ancestors1 = blossom1.treeNodeRef.getAncestors();
+                            ArrayList<Edge> ancestorEdges1 = blossom1.treeNodeRef.getAncestorEdges();
+                            
                             ArrayList<TreeNode> ancestors2 = blossom2.treeNodeRef.getAncestors();
+                            ArrayList<Edge> ancestorEdges2 = blossom2.treeNodeRef.getAncestorEdges();
                             
                             //hladanie najblizsieho spolocneho predka (ideme od korena stromu)
                             int k;
@@ -102,13 +229,13 @@ public class Edmonds {
                             }
                             // k je teraz index prveho nodu, kde sa postupnost predkov od korena lisi
                             // k - 1 je tym padom index posledneho spolocneho predka
-                            List<TreeNode> path1 = ancestors1.subList(k - 1, ancestors1.size());
-                            List<TreeNode> path2 = ancestors2.subList(k , ancestors2.size());
-                            Collections.reverse(path2);
+                            List<TreeNode> nodePath1 = ancestors1.subList(k - 1, ancestors1.size());
+                            List<TreeNode> nodePath2 = ancestors2.subList(k , ancestors2.size());
+                            Collections.reverse(nodePath2);
                             
                             // vytvorime cestu od spolocneho predka (novej stopky) po nasledujuci vrchol v kruznici, ktora bude v novej zelenej bubline
-                            ArrayList<TreeNode> oddCycleNodes = new ArrayList<TreeNode>(path1);
-                            oddCycleNodes.addAll(path2);
+                            ArrayList<TreeNode> oddCycleNodes = new ArrayList<TreeNode>(nodePath1);
+                            oddCycleNodes.addAll(nodePath2);
                             
                             
                             // prevedieme tree nody na prisluchajuce bubliny
@@ -117,8 +244,19 @@ public class Edmonds {
                                 oddCycleBlossoms.add(oddCycleNodes.get(l).containedBlossom);
                             }
                             
+                            // teraz spojime hrany do kruhu
+                            List<Edge> edgePath1 = ancestorEdges1.subList(k, ancestorEdges1.size());
+                            List<Edge> edgePath2 = ancestorEdges2.subList(k, ancestorEdges2.size());
+                            Collections.reverse(edgePath2);
+                            // spojime ich do jedneho zoznamu - prva hrana ide zo stopky, posledna ide z poslednej bubliny do stopky
+                            ArrayList<Edge> oddCycleEdges = new ArrayList<Edge>(edgePath1);
+                            // pridame doprostred cesty este nevu naplnenu hranu
+                            oddCycleEdges.add(fullEdge);
+                            // pridame zvysne hrany
+                            oddCycleEdges.addAll(edgePath2);
+                            
                             // vytvorime novy zeleny kvet obsahujuci neparny cyklus a prislusny node v strome
-                            GreenBlossom newBlossom = new GreenBlossom(oddCycleBlossoms);
+                            GreenBlossom newBlossom = new GreenBlossom(oddCycleBlossoms, oddCycleEdges);
                             TreeNode newNode = new TreeNode(newBlossom);
                             
                             newBlossom.treeNodeRef = newNode;

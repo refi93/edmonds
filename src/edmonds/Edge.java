@@ -10,10 +10,10 @@ package edmonds;
  * @author raf
  */
 public class Edge {
-    int u,v;
+    Vertex u,v;
     int price;
     
-    public Edge(int u, int v, int price) {
+    public Edge(Vertex u, Vertex v, int price) {
         this.u = u;
         this.v = v;
         this.price = price;
@@ -23,7 +23,7 @@ public class Edge {
     @Override
     public int hashCode() {
         int hash = 1;
-        hash = hash * 17 + u * v;
+        hash = hash * 17 + u.id * v.id;
         hash = hash * 13 + price;
         return hash;
     }

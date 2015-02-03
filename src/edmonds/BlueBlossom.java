@@ -13,17 +13,17 @@ package edmonds;
 // one-vertex blossom
 public class BlueBlossom extends Blossom{
 
-    int id;
+    Vertex vertex;
     
-    public BlueBlossom(int id) {
-        this.id = id;
+    public BlueBlossom(Vertex v) {
+        this.vertex = vertex;
         this.thickness = 0;
         this.levelParity = 1; // parita volnej modrej bubliny je 1 (parna)
     }
     
     @Override
-    public int getStopka(){
-        return id;
+    public Vertex getStopka(){
+        return vertex;
     }
     
 }

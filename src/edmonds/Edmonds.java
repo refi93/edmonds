@@ -23,9 +23,10 @@ public class Edmonds {
         Graph myGraph = new Graph(n);
         
         myGraph.addEdge(0, 1, 10);
-        myGraph.addEdge(1, 2, 114);
-        myGraph.addEdge(2, 3, 21);
-        myGraph.addEdge(3, 0, 10);
+        myGraph.addEdge(1, 3, 2);
+        myGraph.addEdge(1, 2, 1);
+        myGraph.addEdge(2, 3, 1);
+        myGraph.addEdge(2, 0, 10);
         
         // vrcholy pridame do modrych bublin a vytvorime pre kazdu z nich novy madarsky strom a pridame do lesa
         for(int i = 0; i < n; i++){
@@ -216,7 +217,6 @@ public class Edmonds {
                             dumb.b1.dumbbellRef = null;
                             dumb.b2.dumbbellRef = null;
                             dumbbells.remove(dumb);
-                            // TODO - TA CINKA SA TAM PRIPAJA UPLNE CUDNE
                             
                             // vytvorime novy vrchol madarskeho stromu
                             TreeNode newNodeFirst;

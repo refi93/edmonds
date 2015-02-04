@@ -74,7 +74,7 @@ public class Graph {
         // aby sa niektora dostala na 0
         for (int i = 0; i < vertexCount; i++){
             Blossom b = vertices.get(i).getOutermostBlossom();
-            if (b.levelParity == -1){
+            if (b instanceof GreenBlossom && b.levelParity == -1){
                 double changeNeeded = b.thickness;
                 if (changeNeeded < r){
                     r = changeNeeded;

@@ -257,13 +257,17 @@ public class Edmonds {
                         }
                         
                         // (P3) ak sa naplni hrana medzi dvomi kvetmi v strome (stat sa to moze len na parnej urovni, lebo len tam je kladny prirastok
-                        else if (blossom1.treeNodeRef != null && blossom2.treeNodeRef != null && blossom1.treeNodeRef.treeRef == blossom2.treeNodeRef.treeRef){
+                        else if (blossom1.treeNodeRef != null && blossom2.treeNodeRef != null && 
+                                blossom1.levelParity == 1 && blossom2.levelParity == 1 && 
+                                blossom1.treeNodeRef.treeRef == blossom2.treeNodeRef.treeRef){
                             // zoznam predchodcov vrcholu s prislusnymi hranami
                             ArrayList<TreeNode> ancestors1 = blossom1.treeNodeRef.getAncestors();
                             ArrayList<Edge> ancestorEdges1 = blossom1.treeNodeRef.getAncestorEdges();
                             
                             ArrayList<TreeNode> ancestors2 = blossom2.treeNodeRef.getAncestors();
                             ArrayList<Edge> ancestorEdges2 = blossom2.treeNodeRef.getAncestorEdges();
+                            
+                            System.out.println(ancestors1 + " " + ancestors2);
                             
                             //hladanie najblizsieho spolocneho predka (ideme od korena stromu)
                             int nearestCommonAncestorId;

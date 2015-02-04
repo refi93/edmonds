@@ -57,14 +57,14 @@ public class TreeNode {
         for(int i = 0; i < children.size(); i++){
             if (alternatingPath.contains(this)){
                 if (alternatingPath.contains(children.get(i))){
-                    breakToDumbbells(alternatingPath, dumbbells, !makeDumbbell);
+                    children.get(i).breakToDumbbells(alternatingPath, dumbbells, !makeDumbbell);
                 }
                 else {
-                    breakToDumbbells(alternatingPath, dumbbells, makeDumbbell);
+                    children.get(i).breakToDumbbells(alternatingPath, dumbbells, makeDumbbell);
                 }
             }
             else{
-                breakToDumbbells(alternatingPath, dumbbells, !makeDumbbell);
+                children.get(i).breakToDumbbells(alternatingPath, dumbbells, !makeDumbbell);
             }
         }
     }

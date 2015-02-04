@@ -24,6 +24,21 @@ public class GreenBlossom extends Blossom{
         if (blossoms.size() % 2 != 1){
             System.err.println("NIEKTO CPE DO BLOSSOMU PARNU KRUZNICU MARHA");
         }
+        
+        // updatujeme vnutornym nodom referenciu na blossom
+        for(int i = 0; i < blossoms.size(); i++){
+            Blossom b = blossoms.get(i);
+            if (b instanceof GreenBlossom) {
+                ArrayList<Vertex> innerVertices = ((GreenBlossom)b).getInnerVertices();
+                for(int j = 0; j < innerVertices.size(); j++){
+                    innerVertices.get(j).addToBlossom(this);
+                }
+            }
+            else {
+                System.out.println("AAXXXX " + ((BlueBlossom)b));
+                ((BlueBlossom)b).vertex.addToBlossom(this);
+            }
+        }
     }
     
     // sluzi na updatovanie hrubky kvetu

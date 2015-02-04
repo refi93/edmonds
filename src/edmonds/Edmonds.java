@@ -267,8 +267,6 @@ public class Edmonds {
                             ArrayList<TreeNode> ancestors2 = blossom2.treeNodeRef.getAncestors();
                             ArrayList<Edge> ancestorEdges2 = blossom2.treeNodeRef.getAncestorEdges();
                             
-                            System.out.println(ancestors1 + " " + ancestors2);
-                            
                             //hladanie najblizsieho spolocneho predka (ideme od korena stromu)
                             int nearestCommonAncestorId;
                             for(nearestCommonAncestorId = 0; nearestCommonAncestorId < Math.min(ancestors1.size(), ancestors2.size()) && ancestors1.get(nearestCommonAncestorId) == ancestors2.get(nearestCommonAncestorId); nearestCommonAncestorId++){ 
@@ -305,7 +303,7 @@ public class Edmonds {
                             GreenBlossom newBlossom = new GreenBlossom(oddCycleBlossoms, oddCycleEdges);
                             TreeNode newNode = new TreeNode(newBlossom);
                             
-                            newBlossom.treeNodeRef = newNode;
+                            System.out.println("NEW BLOSSOM " + blossom1 + " " + blossom2 + " to " + newNode);
                             newBlossom.levelParity = 1; // je na parnej urovni
                             
                             

@@ -37,6 +37,9 @@ public class Vertex {
     
     // vrati n-tu najhlbsiu bublinu (pocinajuc 0)
     public Blossom getNthOutermostBlossom(int level){
+        if (blossomStack.size() <= level){
+            return null;
+        }
         return blossomStack.get(blossomStack.size() - 1 - level);
     }
 }

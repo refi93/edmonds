@@ -14,9 +14,9 @@ import java.util.HashSet;
  */
 public class TreeNode {
     HungarianTree treeRef; //referencia na strom, aby sme vedeli posudit, ci dva vrcholy su v tom istom strome
-    TreeNode parent; // kto je jeho parent vramci madarskeho stromu
-    ArrayList<TreeNode> children; // zoznam deti vramci madarskeho stromu
-    Edge parentEdge; // hrana z grafu spajajuca kvet s otcovskym kvetom
+    private TreeNode parent; // kto je jeho parent vramci madarskeho stromu
+    private ArrayList<TreeNode> children; // zoznam deti vramci madarskeho stromu
+    private Edge parentEdge; // hrana z grafu spajajuca kvet s otcovskym kvetom
     Blossom containedBlossom; // najvacsia zelena bublina vo vnutri nodu
     
     public TreeNode(Blossom containedBlossom){
@@ -34,6 +34,34 @@ public class TreeNode {
             // na dalsej urovni menime opacne
             children.get(i).zmena(-r);
         }
+    }
+    
+    public void addChild(TreeNode child, Edge parentEdge){
+        children.add(child);
+        child.treeRef = this.treeRef;
+        child.parent = this;
+        child.parentEdge = parentEdge;
+    }
+    
+    public void setParent(TreeNode parent, Edge parentEdge){
+        this.parent = parent;
+        this.parentEdge = parentEdge;
+        if (parent != null){
+            parent.children.add(this);
+            this.treeRef = parent.treeRef;
+        }
+    }
+    
+    public ArrayList<TreeNode> getChildren(){
+        return this.children;
+    }
+    
+    public TreeNode getParent(){
+        return this.parent;
+    }
+    
+    public Edge getParentEdge(){
+        return this.parentEdge;
     }
     
     // vrati zoznam predkov pre vrchol od korena po sameho seba

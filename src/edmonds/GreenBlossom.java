@@ -19,13 +19,19 @@ public class GreenBlossom extends Blossom{
     public GreenBlossom(ArrayList<Blossom> blossoms, ArrayList<Edge> edgesBetweenBlossoms){
         
         this.blossoms = blossoms;
+        
+        // vymazeme kvetom referenciu na stary node TODO
+        //for(int i = 0; i < blossoms.size(); i++){
+        //    blossoms.get(i).treeNodeRef = null;
+        //}
+        
         this.edgesBetweenBlossoms = edgesBetweenBlossoms;
         
         if (blossoms.size() % 2 != 1){
             System.err.println("NIEKTO CPE DO BLOSSOMU PARNU KRUZNICU MARHA");
         }
         
-        // updatujeme vnutornym nodom referenciu na blossom
+        // updatujeme vnutornym vrcholom referenciu na blossom
         for(int i = 0; i < blossoms.size(); i++){
             Blossom b = blossoms.get(i);
             if (b instanceof GreenBlossom) {
@@ -35,7 +41,6 @@ public class GreenBlossom extends Blossom{
                 }
             }
             else {
-                System.out.println("AAXXXX " + ((BlueBlossom)b));
                 ((BlueBlossom)b).vertex.addToBlossom(this);
             }
         }
@@ -118,6 +123,15 @@ public class GreenBlossom extends Blossom{
         // rekurzivne sa vnorime, aby sme updatovali stopku
         if (this.blossoms.get(0) instanceof GreenBlossom){
             ((GreenBlossom)this.blossoms.get(0)).setStopkaByEdge(e, level + 1);
+        }
+    }
+    
+    public void pop(){
+        ArrayList<Vertex> innerVertices = new ArrayList<Vertex>();
+        this.getInnerVertices(innerVertices);
+        
+        for(int i = 0; i < innerVertices.size(); i++){
+            innerVertices.get(i).popOutermostBlossom();
         }
     }
     

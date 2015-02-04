@@ -233,7 +233,7 @@ public class Edmonds {
                                 newNodeFirst = new TreeNode(dumb.b2);
                                 dumb.b2.levelParity = -1;
                                 newNodeSecond = new TreeNode(dumb.b1);
-                                dumb.b2.levelParity = 1;
+                                dumb.b1.levelParity = 1;
                             }
                             
                             // nastavime deti pre vrchol cinky susediaci s plnou hranou
@@ -271,7 +271,7 @@ public class Edmonds {
                             
                             //hladanie najblizsieho spolocneho predka (ideme od korena stromu)
                             int nearestCommonAncestorId;
-                            for(nearestCommonAncestorId = 0; ancestors1.get(nearestCommonAncestorId) == ancestors2.get(nearestCommonAncestorId); nearestCommonAncestorId++){ 
+                            for(nearestCommonAncestorId = 0; nearestCommonAncestorId < Math.min(ancestors1.size(), ancestors2.size()) && ancestors1.get(nearestCommonAncestorId) == ancestors2.get(nearestCommonAncestorId); nearestCommonAncestorId++){ 
                             }
                             nearestCommonAncestorId--;
                             

@@ -24,10 +24,6 @@ public class GreenBlossom extends Blossom{
         if (blossoms.size() % 2 != 1){
             System.err.println("NIEKTO CPE DO BLOSSOMU PARNU KRUZNICU MARHA");
         }
-        
-        for(int i = 0; i < blossoms.size(); i++){
-            this.blossoms.add(blossoms.get(i));
-        }
     }
     
     // sluzi na updatovanie hrubky kvetu

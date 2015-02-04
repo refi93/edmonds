@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  *
@@ -16,17 +17,29 @@ import java.util.List;
  */
 public class Edmonds {
     public static void main(String[] args){
-        int n = 4;
+        Scanner input = new Scanner(System.in);
+        
+        
+        int n = input.nextInt();
+        int edgeCount = input.nextInt();
         
         HashSet<Dumbbell> dumbbells = new HashSet<Dumbbell>(); // cinky
         ArrayList<HungarianTree> hungarianForest = new ArrayList<HungarianTree>(); // madarsky les
         Graph myGraph = new Graph(n);
         
+        for(int i = 0; i < edgeCount; i++){
+            int u = input.nextInt() - 1, 
+                v = input.nextInt() - 1, 
+                price = input.nextInt();
+            myGraph.addEdge(u, v, price);
+        }
+        /*
         myGraph.addEdge(0, 1, 10);
         myGraph.addEdge(1, 3, 2);
         myGraph.addEdge(1, 2, 1);
         myGraph.addEdge(2, 3, 1);
         myGraph.addEdge(2, 0, 10);
+        */
         
         // vrcholy pridame do modrych bublin a vytvorime pre kazdu z nich novy madarsky strom a pridame do lesa
         for(int i = 0; i < n; i++){
@@ -42,6 +55,7 @@ public class Edmonds {
         // dokym nemame parovanie
         while (hungarianForest.size() != 0){
             double r = myGraph.getR();
+            System.out.println(r);
             
             // zmenime naboj v stromoch madarskeho lesa
             for (int i = 0;i < hungarianForest.size(); i++){
@@ -148,6 +162,7 @@ public class Edmonds {
                         
                         // najprv teda vytvorime pre kazdy z blossomov novy node 
                         ArrayList<TreeNode> nodePath = new ArrayList<TreeNode>();
+                        
                         for(int j = 0; j < blossomPath.size(); j++){
                             TreeNode newNode = new TreeNode(blossomPath.get(j));
                             newNode.treeRef = currentTree;
@@ -166,6 +181,9 @@ public class Edmonds {
                         }
                         // napokon nastavime parenta a parentEdge poslednemu nodu na ceste (zdedi ho po splasnutej bubline)
                         nodePath.get(nodePath.size() - 1).setParent(oldNode.getParent(), oldNode.getParentEdge());
+                        
+                        // nakoniec este stary node odstranime z deti
+                        oldNode.getParent().getChildren().remove(oldNode);
                     }
                     else {
                         System.err.println("Ina ako zelena bublina na neparnej urovni ma hrubku 0");
@@ -184,9 +202,12 @@ public class Edmonds {
                     Blossom blossom2 = myGraph.vertices.get(j).getOutermostBlossom();
                     
                     double edgeCapacity = myGraph.incidenceMatrix[i][j];
+                    if (i == 3 && j == 31){
+                        System.out.println(i + " " + j + " " + blossom1.thickness + " " + blossom2.thickness + " " + blossom1.levelParity + " " + blossom2.levelParity);
+                    }
                     
                     if (blossom1.thickness + blossom2.thickness > edgeCapacity){
-                        System.err.println("PRESIAHNUTA KAPACITA HRANY, NIECO SA POSRALO");
+                        System.err.println(blossom1 + " " + blossom2 + " " + blossom1.levelParity + " " + blossom2.levelParity + " " + blossom1.thickness + " " + blossom2.thickness + " " + edgeCapacity + " " + "PRESIAHNUTA KAPACITA HRANY, NIECO SA POSRALO");
                     }
                     
                     // ak sa nejaka hrana naplnila
@@ -296,6 +317,11 @@ public class Edmonds {
                                         child.setParent(newNode, child.getParentEdge());
                                     }
                                 }
+                            }
+                            
+                            // napokon stopku novej bubliny odregistrujeme spomedzi deti jej parenta
+                            if (oddCycleNodes.get(0).getParent() != null) {
+                                oddCycleNodes.get(0).getParent().getChildren().remove(oddCycleNodes.get(0));
                             }
                         }
                         

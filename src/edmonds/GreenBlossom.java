@@ -18,6 +18,7 @@ public class GreenBlossom extends Blossom{
     
     public GreenBlossom(ArrayList<Blossom> blossoms, ArrayList<Edge> edgesBetweenBlossoms){
         
+        this.thickness = 0;
         this.blossoms = blossoms;
         
         // vymazeme kvetom referenciu na stary node TODO
@@ -49,9 +50,16 @@ public class GreenBlossom extends Blossom{
     // sluzi na updatovanie hrubky kvetu
     @Override
     public void zmena(double r) {
+        if (this.levelParity == -1 && r >0 ){
+            System.err.println("NESEDI PARITA -1");
+        }
+        
+        if (this.levelParity == 1 && r <0 ){
+            System.err.println("NESEDI PARITA 1");
+        }
         thickness += r;
-        if (thickness == 0){
-            System.err.println("BUBLINE KLESLA HRUBKA NA 0!!!!! - DOIMPLEMENTUJ");
+        if (thickness == 0 && levelParity == -1){
+            System.err.println("BUBLINE KLESLA HRUBKA NA 0!!!!!");
         }
     }
     

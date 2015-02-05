@@ -78,12 +78,12 @@ public class GreenBlossom extends Blossom{
             System.err.println("NESEDI PARITA 1");
         }
         if (thickness == 7.5){
-            System.err.println("MARHAAAAAAAA " + this + " " + (thickness+r));
+            //System.err.println("MARHAAAAAAAA " + this + " " + (thickness+r));
         }
         thickness += r;
         
         if (thickness == 0 && levelParity == -1){
-            System.err.println("BUBLINE KLESLA HRUBKA NA 0!!!!!");
+            //System.err.println("BUBLINE KLESLA HRUBKA NA 0!!!!!");
         }
     }
     
@@ -125,23 +125,26 @@ public class GreenBlossom extends Blossom{
     }
     
     
+    @Override
     public int getStopka(){
         return this.blossoms.get(0).getStopka();
     }
     
     // rekurzivne updatuje stopku bubliny tak, aby pasovala na danu hranu
+    @Override
     public void setStopkaByEdge(Edge e){
         setStopkaByEdge(e, 1);
-        System.err.println(this + " UPDATE STOPKY: nova stopka=" + (this.getStopka() + 1) + " a hrana bola " + e );
+        //System.err.println(this + " UPDATE STOPKY: nova stopka=" + (this.getStopka() + 1) + " a hrana bola " + e );
     }
     
     // level je potrebny, aby sme sa pozerali na bublinu na spravnej urovni
+    @Override
     public void setStopkaByEdge(Edge e, int level){
-        System.err.println(this + " LEVEL " + level);
+        //System.err.println(this + " LEVEL " + level);
         int newStopkaIndex = 0;
         for(newStopkaIndex = 0; true; newStopkaIndex++){ // musime tu stopku najst, inak nieco neni vporiadku
             if ((e.u.getNthOutermostBlossom(level) == this.blossoms.get(newStopkaIndex)) || (e.v.getNthOutermostBlossom(level) == this.blossoms.get(newStopkaIndex))){
-                System.err.println(newStopkaIndex + " xxx " + blossoms.get(newStopkaIndex) + " JUPI");
+                //System.err.println(newStopkaIndex + " xxx " + blossoms.get(newStopkaIndex) + " JUPI");
                 break;
             }
         }

@@ -42,4 +42,13 @@ public class Vertex {
         }
         return blossomStack.get(blossomStack.size() - 1 - level);
     }
+    
+    // vrati celkovy naboj vrcholu
+    public double getCharge(){
+        double ret = 0;
+        for(int i = 0; i < blossomStack.size(); i++){
+            ret += blossomStack.get(i).thickness;
+        }
+        return ret;
+    }
 }

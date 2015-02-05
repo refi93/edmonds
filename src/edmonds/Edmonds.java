@@ -55,6 +55,7 @@ public class Edmonds {
         // dokym nemame parovanie
         while (hungarianForest.size() != 0){
             double r = myGraph.getR();
+            System.err.println("r = " + r);
             
             // zmenime naboj v stromoch madarskeho lesa
             for (int i = 0;i < hungarianForest.size(); i++){
@@ -68,9 +69,10 @@ public class Edmonds {
                 Blossom blossom = myGraph.vertices.get(i).getOutermostBlossom();
                 // (P1) zelenej bubline na neparnej urovni klesol naboj na 0
                 if (blossom.levelParity == -1 && blossom.thickness == 0){
-                    System.err.println("P1");
                     // overime, ze skutocne ide o zelenu bublinu
                     if (blossom instanceof GreenBlossom){
+                        System.err.println("P1 " + blossom);
+                        System.err.println("PRASKLA BUBLINA " + blossom);
                         GreenBlossom oldGreenBlossom = (GreenBlossom) blossom;
                         TreeNode oldNode = oldGreenBlossom.treeNodeRef;
                         HungarianTree currentTree = oldNode.treeRef;
@@ -199,20 +201,23 @@ public class Edmonds {
                     }
                     Blossom blossom1 = myGraph.vertices.get(i).getOutermostBlossom();
                     Blossom blossom2 = myGraph.vertices.get(j).getOutermostBlossom();
+                    Vertex vertex1 = myGraph.vertices.get(i);
+                    Vertex vertex2 = myGraph.vertices.get(j);
                     
                     double edgeCapacity = myGraph.incidenceMatrix[i][j];
                     
-                    if (blossom1.thickness + blossom2.thickness > edgeCapacity){
-                        System.err.println(blossom1 + " " + blossom2 + " " + blossom1.levelParity + " " + blossom2.levelParity + " " + blossom1.thickness + " " + blossom2.thickness + " " + edgeCapacity + " " + "PRESIAHNUTA KAPACITA HRANY, NIECO SA POSRALO");
+                    
+                    if (vertex1.getCharge() + vertex2.getCharge() > edgeCapacity){
+                        System.err.println((i + 1) + " " + (j + 1) + " " + blossom1 + " " + blossom2 + " " + blossom1.levelParity + " " + blossom2.levelParity + " " + vertex1.getCharge() + " " + vertex2.getCharge() + " " + edgeCapacity + " " + "PRESIAHNUTA KAPACITA HRANY, NIECO SA POSRALO");
                     }
                     
                     // ak sa nejaka hrana naplnila
-                    if (blossom1.thickness + blossom2.thickness == edgeCapacity){
+                    if (vertex1.getCharge() + vertex2.getCharge() == edgeCapacity){
                         // naplnena hrana
                         Edge fullEdge = new Edge(myGraph.vertices.get(i), myGraph.vertices.get(j), (int)edgeCapacity);
                         // (P2) ak sa naplnila hrana medzi kvetom na parnej urovni a cinkou
                         if (blossom1.levelParity == 1 && blossom2.levelParity == 0){
-                            System.err.println("P2");
+                            System.err.println("P2 " + blossom1 + " " + blossom2);
                             // odstranime cinku
                             Dumbbell dumb = blossom2.dumbbellRef;
                             dumb.b1.dumbbellRef = null;
@@ -240,16 +245,13 @@ public class Edmonds {
                             
                             newNodeFirst.setParent(blossom1.treeNodeRef, fullEdge);
                             newNodeSecond.setParent(newNodeFirst, dumb.connectingEdge);
-                            System.out.println("newnodefirst " + newNodeFirst.containedBlossom);
-                            System.out.println("newnodefirst parity " + newNodeFirst.containedBlossom.levelParity);
                         }
                         
                         // (P3) ak sa naplni hrana medzi dvomi kvetmi v strome (stat sa to moze len na parnej urovni, lebo len tam je kladny prirastok
-                        else if (blossom1.treeNodeRef != null && blossom2.treeNodeRef != null && 
-                                blossom1.levelParity == 1 && blossom2.levelParity == 1 && 
+                        else if (blossom1.levelParity == 1 && blossom2.levelParity == 1 && 
                                 blossom1.treeNodeRef.treeRef == blossom2.treeNodeRef.treeRef){
                             
-                            System.err.println("P3");
+                            System.err.println("P3 " + blossom1 + " " + blossom2);
                             HungarianTree currentTree = blossom1.treeNodeRef.treeRef;
                             
                             // zoznam predchodcov vrcholu s prislusnymi hranami
@@ -300,7 +302,7 @@ public class Edmonds {
                             for (int l = 0; l < oddCycleBlossoms.size(); l++) {
                                 oddCycleBlossoms.get(l).treeNodeRef = newNode;
                             }
-                            
+                            System.out.println("NEW BLOSSOM IS " + newBlossom);
                             // nastavime novemu nodu parenta - je nim povodny parent novej stopky
                             // tymto sa zaroven zdedi referencia na strom
                             newNode.setParent(oddCycleNodes.get(0).getParent(), oddCycleNodes.get(0).getParentEdge());
@@ -325,8 +327,10 @@ public class Edmonds {
                         }
                         
                         // (P4) ak sa naplni hrana medzi dvomi roznymi stromami, oba stromy sa rozpadnu na cinky
-                        else if (blossom1.treeNodeRef != null && blossom2.treeNodeRef != null && blossom1.treeNodeRef.treeRef != blossom2.treeNodeRef.treeRef && blossom1.levelParity == 1 && blossom2.levelParity == 1){
-                            System.err.println("P4");
+                        else if (blossom1.treeNodeRef != null && blossom2.treeNodeRef != null && 
+                                blossom1.treeNodeRef.treeRef != blossom2.treeNodeRef.treeRef && 
+                                blossom1.levelParity == 1 && blossom2.levelParity == 1){
+                            System.err.println("P4 " + blossom1 + " " + blossom2);
                             HungarianTree tree1 = blossom1.treeNodeRef.treeRef;
                             ArrayList<TreeNode> nodePath1 = blossom1.treeNodeRef.getAncestors();
                             ArrayList<Edge> edgePath1 = blossom1.treeNodeRef.getAncestorEdges();

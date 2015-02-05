@@ -51,17 +51,22 @@ public class Graph {
             for(int j = 0; j < vertexCount; j++){
                 Blossom b1 = vertices.get(i).getOutermostBlossom();
                 Blossom b2 = vertices.get(j).getOutermostBlossom();
+                Vertex v1 = vertices.get(i);
+                Vertex v2 = vertices.get(j);
                 
                 double changeNeeded = r;
                 // zmysel to ma riesit len pre dva rozne vonkajsie kvety na parnej urovni
                 // cinky maju uroven 0 (ani parna, ani neparna), cize pre tie to neriesime
                 if ((b1 != b2) && (b1.levelParity == 1) && (b2.levelParity == 1)){
-                    changeNeeded = (incidenceMatrix[i][j] - b1.thickness - b2.thickness) / 2;
+                    changeNeeded = (incidenceMatrix[i][j] - v1.getCharge()- v2.getCharge()) / 2;
                 }
                 
                 // ak jedna z bublin je cinka (ta co ma levelParity 0)
                 else if ((b1.levelParity == 0) && (b2.levelParity == 1)){
-                    changeNeeded = incidenceMatrix[i][j] - b1.thickness - b2.thickness;
+                    changeNeeded = incidenceMatrix[i][j] - v1.getCharge() - v2.getCharge();
+                    if (changeNeeded < 0){
+                        System.out.println("AAAAAA");
+                    }
                 }
                 
                 if (changeNeeded < r) {
@@ -69,6 +74,7 @@ public class Graph {
                 }
             }
         }
+        
         
         // teraz sa pozrieme na zelene bubliny na neparnej urovni, ze o kolko ich potrebujeme splasnut,
         // aby sa niektora dostala na 0

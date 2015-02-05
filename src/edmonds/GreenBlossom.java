@@ -20,11 +20,6 @@ public class GreenBlossom extends Blossom{
         this.thickness = 0;
         this.blossoms = blossoms;
         
-        // vymazeme kvetom referenciu na stary node TODO
-        //for(int i = 0; i < blossoms.size(); i++){
-        //    blossoms.get(i).treeNodeRef = null;
-        //}
-        
         this.edgesBetweenBlossoms = edgesBetweenBlossoms;
         
         if (blossoms.size() % 2 != 1){
@@ -77,14 +72,7 @@ public class GreenBlossom extends Blossom{
         if (this.levelParity == 1 && r <0 ){
             System.err.println("NESEDI PARITA 1");
         }
-        if (thickness == 7.5){
-            //System.err.println("MARHAAAAAAAA " + this + " " + (thickness+r));
-        }
         thickness += r;
-        
-        if (thickness == 0 && levelParity == -1){
-            //System.err.println("BUBLINE KLESLA HRUBKA NA 0!!!!!");
-        }
     }
     
     // vrati zoznam vrcholov vo vnutri bubliny
@@ -111,7 +99,6 @@ public class GreenBlossom extends Blossom{
     @Override
     public int getMatchingPrice(){
         int ret = 0;
-        //System.out.println(this + " " + edgesBetweenBlossoms.size());
         for(int i = 0; i < edgesBetweenBlossoms.size(); i++){
             if (i % 2 == 1){
                 System.out.println(edgesBetweenBlossoms.get(i));
@@ -134,17 +121,14 @@ public class GreenBlossom extends Blossom{
     @Override
     public void setStopkaByEdge(Edge e){
         setStopkaByEdge(e, 1);
-        //System.err.println(this + " UPDATE STOPKY: nova stopka=" + (this.getStopka() + 1) + " a hrana bola " + e );
     }
     
     // level je potrebny, aby sme sa pozerali na bublinu na spravnej urovni
     @Override
     public void setStopkaByEdge(Edge e, int level){
-        //System.err.println(this + " LEVEL " + level);
         int newStopkaIndex = 0;
         for(newStopkaIndex = 0; true; newStopkaIndex++){ // musime tu stopku najst, inak nieco neni vporiadku
             if ((e.u.getNthOutermostBlossom(level) == this.blossoms.get(newStopkaIndex)) || (e.v.getNthOutermostBlossom(level) == this.blossoms.get(newStopkaIndex))){
-                //System.err.println(newStopkaIndex + " xxx " + blossoms.get(newStopkaIndex) + " JUPI");
                 break;
             }
         }
@@ -174,11 +158,6 @@ public class GreenBlossom extends Blossom{
                 this.blossoms.get(i + 1).setStopkaByEdge(edgesBetweenBlossoms.get(i), level + 1);
             }
         }
-        /*
-        // rekurzivne sa vnorime, aby sme updatovali stopku
-        if (this.blossoms.get(0) instanceof GreenBlossom){
-            ((GreenBlossom)this.blossoms.get(0)).setStopkaByEdge(e, level + 1);
-        }*/
     }
     
     public void pop(){

@@ -16,13 +16,9 @@ import java.util.HashSet;
 public class Graph {
     int vertexCount;
     
-    // matica susednosti, kde si pamatame ceny
-    ArrayList<Edge> edgeList;
+    ArrayList<Edge> edgeList; // zoznam hran grafu
     
     ArrayList<Vertex> vertices; // mnozina vrcholov - k vrcholu si pamatame bubliny, kam patri
-    
-    // matica susednosti, kde si pamatame ceny
-    //int[][] incidenceMatrix;
     
     public Graph(int vertexCount) {
         this.vertexCount = vertexCount;
@@ -33,18 +29,9 @@ public class Graph {
         for(int i = 0; i < vertexCount; i++){
             vertices.add(new Vertex(i));
         }
-        
-        // nastavime ceny hran na nekonecno
-        //for (int i = 0; i < vertexCount; i++){
-        //    for (int j = 0; j < vertexCount; j++){
-        //        incidenceMatrix[i][j] = Variables.INFTY;
-        //    }
-        //}
     }
     
     public void addEdge(int u, int v, int price) {
-        //incidenceMatrix[u][v] = price;
-        //incidenceMatrix[v][u] = price;
         edgeList.add(new Edge(vertices.get(u), vertices.get(v), price));
         edgeList.add(new Edge(vertices.get(v), vertices.get(u), price));
     }
@@ -69,16 +56,12 @@ public class Graph {
             // ak jedna z bublin je cinka (ta co ma levelParity 0)
             else if ((b1.levelParity == 0) && (b2.levelParity == 1)){
                 changeNeeded = e.price - v1.getCharge() - v2.getCharge();
-                /*if (changeNeeded < 0){
-                    System.err.println("VYSIEL ZAPORNY CHANGE, NIECO SA POSRALO");
-                }*/
             }
 
             if (changeNeeded < r) {
                 r = changeNeeded;
             }
         }
-        
         
         // teraz sa pozrieme na zelene bubliny na neparnej urovni, ze o kolko ich potrebujeme splasnut,
         // aby sa niektora dostala na 0
@@ -90,6 +73,11 @@ public class Graph {
                     r = changeNeeded;
                 }
             }
+        }
+        
+        if (r == Variables.INFTY){
+            System.err.println("NO 1-FACTOR AVAILABLE");
+            System.exit(-1);
         }
         return r;
     }

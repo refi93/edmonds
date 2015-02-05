@@ -33,13 +33,6 @@ public class Edmonds {
                 price = input.nextInt();
             myGraph.addEdge(u, v, price);
         }
-        /*
-        myGraph.addEdge(0, 1, 10);
-        myGraph.addEdge(1, 3, 2);
-        myGraph.addEdge(1, 2, 1);
-        myGraph.addEdge(2, 3, 1);
-        myGraph.addEdge(2, 0, 10);
-        */
         
         // vrcholy pridame do modrych bublin a vytvorime pre kazdu z nich novy madarsky strom a pridame do lesa
         for(int i = 0; i < n; i++){
@@ -186,9 +179,9 @@ public class Edmonds {
                         // nakoniec este stary node odstranime z deti
                         oldNode.getParent().getChildren().remove(oldNode);
                     }
-                    else {
-                        //System.err.println("Ina ako zelena bublina na neparnej urovni ma hrubku 0");
-                    }
+                    /*else {
+                        System.err.println("Ina ako zelena bublina na neparnej urovni ma hrubku 0");
+                    }*/
                     
                 }
             }
@@ -208,7 +201,6 @@ public class Edmonds {
                         Edge fullEdge = e;
                         // (P2) ak sa naplnila hrana medzi kvetom na parnej urovni a cinkou
                         if (blossom1.levelParity == 1 && blossom2.levelParity == 0){
-                            //System.err.println("P2 " + blossom1 + " " + blossom2);
                             // odstranime cinku
                             Dumbbell dumb = blossom2.dumbbellRef;
                             dumb.b1.dumbbellRef = null;
@@ -242,7 +234,6 @@ public class Edmonds {
                         else if (blossom1 != blossom2 && blossom1.levelParity == 1 && blossom2.levelParity == 1 && 
                                 blossom1.treeNodeRef.treeRef == blossom2.treeNodeRef.treeRef){
                             
-                            //System.err.println("P3 " + blossom1 + " " + blossom2);
                             HungarianTree currentTree = blossom1.treeNodeRef.treeRef;
                             
                             // zoznam predchodcov vrcholu s prislusnymi hranami
@@ -275,9 +266,7 @@ public class Edmonds {
                             // teraz spojime hrany do kruhu
                             List<Edge> edgePath1 = ancestorEdges1.subList(nearestCommonAncestorId, ancestorEdges1.size());
                             List<Edge> edgePath2 = ancestorEdges2.subList(nearestCommonAncestorId, ancestorEdges2.size()); // ???
-                            
-                            //System.err.println(edgePath1 + " " + edgePath2 + "MOMOMO");
-                            
+                                                        
                             Collections.reverse(edgePath2);
                             // spojime ich do jedneho zoznamu - prva hrana ide zo stopky, posledna ide z poslednej bubliny do stopky
                             ArrayList<Edge> oddCycleEdges = new ArrayList<Edge>(edgePath1);
@@ -296,7 +285,6 @@ public class Edmonds {
                             for (int l = 0; l < oddCycleBlossoms.size(); l++) {
                                 oddCycleBlossoms.get(l).treeNodeRef = newNode;
                             }
-                            //System.err.println("NEW BLOSSOM IS " + newBlossom + " " + oddCycleBlossoms + " " + oddCycleEdges);
                             // nastavime novemu nodu parenta - je nim povodny parent novej stopky
                             // tymto sa zaroven zdedi referencia na strom
                             newNode.setParent(oddCycleNodes.get(0).getParent(), oddCycleNodes.get(0).getParentEdge());
@@ -327,10 +315,6 @@ public class Edmonds {
                         else if (blossom1.treeNodeRef != null && blossom2.treeNodeRef != null && 
                                 blossom1.treeNodeRef.treeRef != blossom2.treeNodeRef.treeRef && 
                                 blossom1.levelParity == 1 && blossom2.levelParity == 1){
-                            //System.err.println("P4 " + blossom1 + " " + blossom2);
-                            if (blossom1 instanceof BlueBlossom && blossom2 instanceof BlueBlossom){
-                                //System.err.println((((BlueBlossom)blossom1).vertex.id+1) + " " + (((BlueBlossom)blossom2).vertex.id+1));
-                            }
                             
                             HungarianTree tree1 = blossom1.treeNodeRef.treeRef;
                             ArrayList<TreeNode> nodePath1 = blossom1.treeNodeRef.getAncestors();
@@ -342,20 +326,12 @@ public class Edmonds {
                             
                             
                             // pridame cinky na ktore sa rozpadli oba stromy, okrem tej cinky, co ma tu naplnenu hranu
-                            //System.out.println(blossom1 + " " + blossom2);
-                            //System.out.println(blossom1.levelParity + " " + blossom2.levelParity);
-                            //System.out.println("tree 1 size is " + tree1.getSize());
-                            //System.out.println("nodePath1 size is " + nodePath1.size());
-                            //System.out.println("tree 2 size is " + tree2.getSize());
                             ArrayList<Dumbbell> arr1 = tree1.breakToDumbbells(new HashSet<TreeNode>(nodePath1));
                             dumbbells.addAll(arr1);
-                            //System.err.println("arr1 " + arr1);
                             ArrayList<Dumbbell> arr2 = tree2.breakToDumbbells(new HashSet<TreeNode>(nodePath2));
                             dumbbells.addAll(arr2);
-                            //System.err.println("arr2 " + arr2.size());
                             
                             // a este pridame cinku, co vznike naplnenou hranou medzi stromami
-                            //Dumbbell dumb = new Dumbbell(nodePath1.get(nodePath1.size() - 1).containedBlossom, nodePath2.get(nodePath2.size() - 1).containedBlossom, fullEdge);
                             Dumbbell dumb = new Dumbbell(blossom1, blossom2, fullEdge);
                             dumbbells.add(dumb);
                             
@@ -371,7 +347,6 @@ public class Edmonds {
         System.out.println("Matching contains the following edges:");
         int matchingPrice = 0;
         for(Dumbbell dumb : dumbbells){
-            //System.out.println(dumb);
             matchingPrice += dumb.getTotalMatchingPrice();
         }
         

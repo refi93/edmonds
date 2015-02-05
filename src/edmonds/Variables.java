@@ -10,5 +10,5 @@ package edmonds;
  * @author raf
  */
 public class Variables {
-    public static int INFTY = 47474747;
+    public static int INFTY = 474747474;
 }

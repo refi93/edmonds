@@ -57,7 +57,11 @@ public class GreenBlossom extends Blossom{
         if (this.levelParity == 1 && r <0 ){
             System.err.println("NESEDI PARITA 1");
         }
+        if (thickness == 7.5){
+            System.err.println("MARHAAAAAAAA " + this + " " + (thickness+r));
+        }
         thickness += r;
+        
         if (thickness == 0 && levelParity == -1){
             System.err.println("BUBLINE KLESLA HRUBKA NA 0!!!!!");
         }

@@ -206,8 +206,15 @@ public class Edmonds {
                     
                     double edgeCapacity = myGraph.incidenceMatrix[i][j];
                     
+                    if (i == 3 && j == 9) {
+                        if (blossom2.treeNodeRef != null){
+                            System.err.println(blossom2.treeNodeRef.getAncestors());
+                            System.err.println(blossom2.treeNodeRef.treeRef.root.containedBlossom);
+                        }
+                        System.err.println(blossom1 + " " + blossom2 + " " + blossom1.levelParity + " " + blossom2.levelParity + " " + vertex1.getCharge() + " " + vertex2.getCharge());
+                    }
                     
-                    if (vertex1.getCharge() + vertex2.getCharge() > edgeCapacity){
+                    if (i == 3 && j == 9 && vertex1.getOutermostBlossom() != vertex2.getOutermostBlossom() && vertex1.getCharge() + vertex2.getCharge() > edgeCapacity){
                         System.err.println((i + 1) + " " + (j + 1) + " " + blossom1 + " " + blossom2 + " " + blossom1.levelParity + " " + blossom2.levelParity + " " + vertex1.getCharge() + " " + vertex2.getCharge() + " " + edgeCapacity + " " + "PRESIAHNUTA KAPACITA HRANY, NIECO SA POSRALO");
                     }
                     
@@ -248,7 +255,7 @@ public class Edmonds {
                         }
                         
                         // (P3) ak sa naplni hrana medzi dvomi kvetmi v strome (stat sa to moze len na parnej urovni, lebo len tam je kladny prirastok
-                        else if (blossom1.levelParity == 1 && blossom2.levelParity == 1 && 
+                        else if (blossom1 != blossom2 && blossom1.levelParity == 1 && blossom2.levelParity == 1 && 
                                 blossom1.treeNodeRef.treeRef == blossom2.treeNodeRef.treeRef){
                             
                             System.err.println("P3 " + blossom1 + " " + blossom2);
@@ -302,7 +309,7 @@ public class Edmonds {
                             for (int l = 0; l < oddCycleBlossoms.size(); l++) {
                                 oddCycleBlossoms.get(l).treeNodeRef = newNode;
                             }
-                            System.out.println("NEW BLOSSOM IS " + newBlossom);
+                            System.err.println("NEW BLOSSOM IS " + newBlossom);
                             // nastavime novemu nodu parenta - je nim povodny parent novej stopky
                             // tymto sa zaroven zdedi referencia na strom
                             newNode.setParent(oddCycleNodes.get(0).getParent(), oddCycleNodes.get(0).getParentEdge());
@@ -323,6 +330,9 @@ public class Edmonds {
                             // napokon stopku novej bubliny odregistrujeme spomedzi deti jej parenta
                             if (oddCycleNodes.get(0).getParent() != null) {
                                 oddCycleNodes.get(0).getParent().getChildren().remove(oddCycleNodes.get(0));
+                            }
+                            else{ // inak mame docinenia s rootom a bude treba updatovat root node
+                                newNode.treeRef.root = newNode;    
                             }
                         }
                         

@@ -65,7 +65,7 @@ public class Graph {
                 else if ((b1.levelParity == 0) && (b2.levelParity == 1)){
                     changeNeeded = incidenceMatrix[i][j] - v1.getCharge() - v2.getCharge();
                     if (changeNeeded < 0){
-                        System.out.println("AAAAAA");
+                        System.err.println("VYSIEL ZAPORNY CHANGE, NIECO SA POSRALO");
                     }
                 }
                 

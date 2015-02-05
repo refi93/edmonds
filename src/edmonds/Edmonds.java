@@ -205,14 +205,14 @@ public class Edmonds {
                     Vertex vertex2 = myGraph.vertices.get(j);
                     
                     double edgeCapacity = myGraph.incidenceMatrix[i][j];
-                    
+                    /*
                     if (i == 3 && j == 9) {
                         if (blossom2.treeNodeRef != null){
                             System.err.println(blossom2.treeNodeRef.getAncestors());
                             System.err.println(blossom2.treeNodeRef.treeRef.root.containedBlossom);
                         }
                         System.err.println(blossom1 + " " + blossom2 + " " + blossom1.levelParity + " " + blossom2.levelParity + " " + vertex1.getCharge() + " " + vertex2.getCharge());
-                    }
+                    }*/
                     
                     if (i == 3 && j == 9 && vertex1.getOutermostBlossom() != vertex2.getOutermostBlossom() && vertex1.getCharge() + vertex2.getCharge() > edgeCapacity){
                         System.err.println((i + 1) + " " + (j + 1) + " " + blossom1 + " " + blossom2 + " " + blossom1.levelParity + " " + blossom2.levelParity + " " + vertex1.getCharge() + " " + vertex2.getCharge() + " " + edgeCapacity + " " + "PRESIAHNUTA KAPACITA HRANY, NIECO SA POSRALO");
@@ -290,7 +290,10 @@ public class Edmonds {
                             
                             // teraz spojime hrany do kruhu
                             List<Edge> edgePath1 = ancestorEdges1.subList(nearestCommonAncestorId, ancestorEdges1.size());
-                            List<Edge> edgePath2 = ancestorEdges2.subList(nearestCommonAncestorId, ancestorEdges2.size());
+                            List<Edge> edgePath2 = ancestorEdges2.subList(nearestCommonAncestorId, ancestorEdges2.size()); // ???
+                            
+                            System.err.println(edgePath1 + " " + edgePath2 + "MOMOMO");
+                            
                             Collections.reverse(edgePath2);
                             // spojime ich do jedneho zoznamu - prva hrana ide zo stopky, posledna ide z poslednej bubliny do stopky
                             ArrayList<Edge> oddCycleEdges = new ArrayList<Edge>(edgePath1);
@@ -341,6 +344,10 @@ public class Edmonds {
                                 blossom1.treeNodeRef.treeRef != blossom2.treeNodeRef.treeRef && 
                                 blossom1.levelParity == 1 && blossom2.levelParity == 1){
                             System.err.println("P4 " + blossom1 + " " + blossom2);
+                            if (blossom1 instanceof BlueBlossom && blossom2 instanceof BlueBlossom){
+                                System.err.println((((BlueBlossom)blossom1).vertex.id+1) + " " + (((BlueBlossom)blossom2).vertex.id+1));
+                            }
+                            
                             HungarianTree tree1 = blossom1.treeNodeRef.treeRef;
                             ArrayList<TreeNode> nodePath1 = blossom1.treeNodeRef.getAncestors();
                             ArrayList<Edge> edgePath1 = blossom1.treeNodeRef.getAncestorEdges();
@@ -358,10 +365,10 @@ public class Edmonds {
                             //System.out.println("tree 2 size is " + tree2.getSize());
                             ArrayList<Dumbbell> arr1 = tree1.breakToDumbbells(new HashSet<TreeNode>(nodePath1));
                             dumbbells.addAll(arr1);
-                            //System.out.println("arr1 " + arr1.size());
+                            System.err.println("arr1 " + arr1);
                             ArrayList<Dumbbell> arr2 = tree2.breakToDumbbells(new HashSet<TreeNode>(nodePath2));
                             dumbbells.addAll(arr2);
-                            //System.out.println("arr2 " + arr2.size());
+                            System.err.println("arr2 " + arr2.size());
                             
                             // a este pridame cinku, co vznike naplnenou hranou medzi stromami
                             //Dumbbell dumb = new Dumbbell(nodePath1.get(nodePath1.size() - 1).containedBlossom, nodePath2.get(nodePath2.size() - 1).containedBlossom, fullEdge);

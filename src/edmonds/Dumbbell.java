@@ -42,6 +42,16 @@ public class Dumbbell {
         connectingEdge = e;
     }
     
+    @Override
+    public String toString(){
+        if (false && b1 instanceof BlueBlossom && b2 instanceof BlueBlossom){
+            return (((BlueBlossom)b1).vertex.id + 1) + "--" + (((BlueBlossom)b2).vertex.id + 1);
+        }
+        else {
+            return b1 + " " + b2;
+        }
+    }
+    
     public int getTotalMatchingPrice(){
         System.out.println(connectingEdge);
         return connectingEdge.price + b1.getMatchingPrice() + b2.getMatchingPrice();

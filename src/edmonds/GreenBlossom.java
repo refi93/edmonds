@@ -47,6 +47,23 @@ public class GreenBlossom extends Blossom{
         }
     }
     
+    @Override
+    public String toString(){
+        String ret = super.toString() + "[";
+        ArrayList<Vertex> arr = this.getInnerVertices();
+        for (Vertex v : arr){
+            ret += (v.id + 1) + " ";
+        }
+        ret += "]";
+        
+        ret += "{";
+        for(Edge e : this.edgesBetweenBlossoms){
+            ret += e + ", ";
+        }
+        ret += "}";
+        return ret;
+    }
+    
     // sluzi na updatovanie hrubky kvetu
     @Override
     public void zmena(double r) {
@@ -91,9 +108,10 @@ public class GreenBlossom extends Blossom{
     @Override
     public int getMatchingPrice(){
         int ret = 0;
+        //System.out.println(this + " " + edgesBetweenBlossoms.size());
         for(int i = 0; i < edgesBetweenBlossoms.size(); i++){
             if (i % 2 == 1){
-                System.out.println(edgesBetweenBlossoms.get(i));
+                //System.out.println(edgesBetweenBlossoms.get(i));
                 ret += edgesBetweenBlossoms.get(i).price;
             }
         }
@@ -113,7 +131,7 @@ public class GreenBlossom extends Blossom{
     private void setStopkaByEdge(Edge e, int level){
         int newStopkaIndex = 0;
         for(newStopkaIndex = 0;newStopkaIndex < this.blossoms.size(); newStopkaIndex++){
-            if ((e.u.getNthOutermostBlossom(level) == this) || (e.v.getNthOutermostBlossom(level) == this)){
+            if ((e.u.getNthOutermostBlossom(level) == this.blossoms.get(newStopkaIndex)) || (e.v.getNthOutermostBlossom(level) == this.blossoms.get(newStopkaIndex))){
                 break;
             }
         }
@@ -126,12 +144,13 @@ public class GreenBlossom extends Blossom{
             newBlossomsOrder.add(blossoms.get((i + newStopkaIndex) % blossoms.size()));
         }
         
-        for(int i = 0; i < newEdgesBetweenBlossomsOrder.size(); i++){
+        for(int i = 0; i < edgesBetweenBlossoms.size(); i++){
             newEdgesBetweenBlossomsOrder.add(edgesBetweenBlossoms.get((i + newStopkaIndex) % edgesBetweenBlossoms.size()));
         }
         
         this.blossoms = newBlossomsOrder;
         this.edgesBetweenBlossoms = newEdgesBetweenBlossomsOrder;
+        System.err.println(edgesBetweenBlossoms + "AAAAAAA");
         
         // rekurzivne sa vnorime, aby sme updatovali stopku
         if (this.blossoms.get(0) instanceof GreenBlossom){

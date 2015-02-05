@@ -115,8 +115,8 @@ public class TreeNode {
     // vrati hrany na ceste od korena po node
     public ArrayList<Edge> getAncestorEdges(){
         ArrayList<Edge> ret = new ArrayList<Edge>();
-        getAncestorEdges(ret);
         if (this.parentEdge != null){
+            parent.getAncestorEdges(ret);
             ret.add(this.parentEdge);
         }
         return ret;

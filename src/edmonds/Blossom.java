@@ -23,6 +23,18 @@ class Blossom {
         thickness += r;
     }
     
+    public void setStopkaByEdge(Edge e){
+        return;
+    }
+    
+    public void setStopkaByEdge(Edge e, int level){
+        return;
+    }
+    
+    public int getStopka(){
+        return 0;
+    }
+    
     // vrati cenu parovania vo vnutri bubliny
     public int getMatchingPrice(){
         return 0;

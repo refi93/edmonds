@@ -17,7 +17,6 @@ public class GreenBlossom extends Blossom{
     ArrayList<Edge> edgesBetweenBlossoms; // na i-tej pozicii je hrana medzi i a (i+1) % n
     
     public GreenBlossom(ArrayList<Blossom> blossoms, ArrayList<Edge> edgesBetweenBlossoms){
-        
         this.thickness = 0;
         this.blossoms = blossoms;
         
@@ -30,6 +29,10 @@ public class GreenBlossom extends Blossom{
         
         if (blossoms.size() % 2 != 1){
             System.err.println("NIEKTO CPE DO BLOSSOMU PARNU KRUZNICU MARHA");
+        }
+        
+        if (blossoms.size() != edgesBetweenBlossoms.size()) {
+            System.err.println(blossoms + " " + edgesBetweenBlossoms + " " + "NIEKTO SA SNAZI VYTVORIT BLOSSOM S PRIMALO HRANAMI!!!!!");
         }
         
         // updatujeme vnutornym vrcholom referenciu na blossom
@@ -111,7 +114,7 @@ public class GreenBlossom extends Blossom{
         //System.out.println(this + " " + edgesBetweenBlossoms.size());
         for(int i = 0; i < edgesBetweenBlossoms.size(); i++){
             if (i % 2 == 1){
-                //System.out.println(edgesBetweenBlossoms.get(i));
+                System.out.println(edgesBetweenBlossoms.get(i));
                 ret += edgesBetweenBlossoms.get(i).price;
             }
         }
@@ -122,16 +125,23 @@ public class GreenBlossom extends Blossom{
     }
     
     
+    public int getStopka(){
+        return this.blossoms.get(0).getStopka();
+    }
+    
     // rekurzivne updatuje stopku bubliny tak, aby pasovala na danu hranu
     public void setStopkaByEdge(Edge e){
         setStopkaByEdge(e, 1);
+        System.err.println(this + " UPDATE STOPKY: nova stopka=" + (this.getStopka() + 1) + " a hrana bola " + e );
     }
     
     // level je potrebny, aby sme sa pozerali na bublinu na spravnej urovni
-    private void setStopkaByEdge(Edge e, int level){
+    public void setStopkaByEdge(Edge e, int level){
+        System.err.println(this + " LEVEL " + level);
         int newStopkaIndex = 0;
-        for(newStopkaIndex = 0;newStopkaIndex < this.blossoms.size(); newStopkaIndex++){
+        for(newStopkaIndex = 0; true; newStopkaIndex++){ // musime tu stopku najst, inak nieco neni vporiadku
             if ((e.u.getNthOutermostBlossom(level) == this.blossoms.get(newStopkaIndex)) || (e.v.getNthOutermostBlossom(level) == this.blossoms.get(newStopkaIndex))){
+                System.err.println(newStopkaIndex + " xxx " + blossoms.get(newStopkaIndex) + " JUPI");
                 break;
             }
         }
@@ -140,9 +150,10 @@ public class GreenBlossom extends Blossom{
         ArrayList<Blossom> newBlossomsOrder = new ArrayList<Blossom>();
         ArrayList<Edge> newEdgesBetweenBlossomsOrder = new ArrayList<Edge>();
         
-        for(int i = 0; i < blossoms.size();i++){
-            newBlossomsOrder.add(blossoms.get((i + newStopkaIndex) % blossoms.size()));
+        for(int i = newStopkaIndex; i < blossoms.size() + newStopkaIndex;i++){
+            newBlossomsOrder.add(blossoms.get(i % blossoms.size()));
         }
+        
         
         for(int i = 0; i < edgesBetweenBlossoms.size(); i++){
             newEdgesBetweenBlossomsOrder.add(edgesBetweenBlossoms.get((i + newStopkaIndex) % edgesBetweenBlossoms.size()));
@@ -150,12 +161,21 @@ public class GreenBlossom extends Blossom{
         
         this.blossoms = newBlossomsOrder;
         this.edgesBetweenBlossoms = newEdgesBetweenBlossomsOrder;
-        System.err.println(edgesBetweenBlossoms + "AAAAAAA");
         
+        
+        // rekurzivne sa vnorime, aby sme updatovali stopku
+        this.blossoms.get(0).setStopkaByEdge(e, level + 1);
+        for(int i = 0; i < blossoms.size(); i++){
+            if (i % 2 == 1){
+                this.blossoms.get(i).setStopkaByEdge(edgesBetweenBlossoms.get(i), level + 1);
+                this.blossoms.get(i + 1).setStopkaByEdge(edgesBetweenBlossoms.get(i), level + 1);
+            }
+        }
+        /*
         // rekurzivne sa vnorime, aby sme updatovali stopku
         if (this.blossoms.get(0) instanceof GreenBlossom){
             ((GreenBlossom)this.blossoms.get(0)).setStopkaByEdge(e, level + 1);
-        }
+        }*/
     }
     
     public void pop(){

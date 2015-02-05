@@ -22,9 +22,13 @@ public class BlueBlossom extends Blossom{
         v.addToBlossom(this);
     }
     
+    public int getStopka(){
+        return this.vertex.id;
+    }
+    
     @Override
     public String toString(){
-        return super.toString() + "[" + (this.vertex.id + 1) + "]";
+        return super.toString() + "[" + (this.vertex.id + 1) + "b" + "]";
     }
     
 }

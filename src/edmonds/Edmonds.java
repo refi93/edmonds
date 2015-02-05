@@ -312,7 +312,7 @@ public class Edmonds {
                             for (int l = 0; l < oddCycleBlossoms.size(); l++) {
                                 oddCycleBlossoms.get(l).treeNodeRef = newNode;
                             }
-                            System.err.println("NEW BLOSSOM IS " + newBlossom);
+                            System.err.println("NEW BLOSSOM IS " + newBlossom + " " + oddCycleBlossoms + " " + oddCycleEdges);
                             // nastavime novemu nodu parenta - je nim povodny parent novej stopky
                             // tymto sa zaroven zdedi referencia na strom
                             newNode.setParent(oddCycleNodes.get(0).getParent(), oddCycleNodes.get(0).getParentEdge());
@@ -387,6 +387,7 @@ public class Edmonds {
         System.out.println("Matching contains the following edges:");
         int matchingPrice = 0;
         for(Dumbbell dumb : dumbbells){
+            System.out.println(dumb);
             matchingPrice += dumb.getTotalMatchingPrice();
         }
         

@@ -19,32 +19,6 @@ public class Edge {
         this.price = price;
     }
     
-    
-    @Override
-    public int hashCode() {
-        int hash = 1;
-        hash = hash * 17 + u.id * v.id;
-        hash = hash * 13 + price;
-        return hash;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-       if (!(obj instanceof Edge))
-            return false;
-        if (obj == this)
-            return true;
-
-        Edge e = (Edge) obj;
-        
-        boolean ret1 = (e.u == this.u) && 
-                (e.v == this.v);
-        boolean ret2 = (e.u == this.v) && 
-                (e.v == this.u);
-        
-        return (ret1 || ret2) && (e.price == this.price);
-    }
-    
     @Override
     public String toString(){
         return (this.u.id + 1) + " " + (this.v.id + 1) + " " + this.price;

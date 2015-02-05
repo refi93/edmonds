@@ -17,61 +17,65 @@ public class Graph {
     int vertexCount;
     
     // matica susednosti, kde si pamatame ceny
-    int[][] incidenceMatrix;
+    ArrayList<Edge> edgeList;
     
     ArrayList<Vertex> vertices; // mnozina vrcholov - k vrcholu si pamatame bubliny, kam patri
     
+    // matica susednosti, kde si pamatame ceny
+    //int[][] incidenceMatrix;
+    
     public Graph(int vertexCount) {
         this.vertexCount = vertexCount;
-        incidenceMatrix = new int[vertexCount][vertexCount];
-        vertices = new ArrayList<Vertex>();
+        //incidenceMatrix = new int[vertexCount][vertexCount];
+        vertices = new ArrayList<>();
+        edgeList = new ArrayList<>();
         
         for(int i = 0; i < vertexCount; i++){
             vertices.add(new Vertex(i));
         }
         
         // nastavime ceny hran na nekonecno
-        for (int i = 0; i < vertexCount; i++){
-            for (int j = 0; j < vertexCount; j++){
-                incidenceMatrix[i][j] = Variables.INFTY;
-            }
-        }
+        //for (int i = 0; i < vertexCount; i++){
+        //    for (int j = 0; j < vertexCount; j++){
+        //        incidenceMatrix[i][j] = Variables.INFTY;
+        //    }
+        //}
     }
     
-    public void addEdge(int v1, int v2, int price) {
-        incidenceMatrix[v1][v2] = price;
-        incidenceMatrix[v2][v1] = price;
+    public void addEdge(int u, int v, int price) {
+        //incidenceMatrix[u][v] = price;
+        //incidenceMatrix[v][u] = price;
+        edgeList.add(new Edge(vertices.get(u), vertices.get(v), price));
+        edgeList.add(new Edge(vertices.get(v), vertices.get(u), price));
     }
     
     public double getR(){
         double r = Variables.INFTY;
-        
         // najprv overime, ake r treba na naplnenie niektorej hrany medzi bublinami pripadne cinkami
-        for (int i = 0; i < vertexCount; i++){
-            for(int j = 0; j < vertexCount; j++){
-                Blossom b1 = vertices.get(i).getOutermostBlossom();
-                Blossom b2 = vertices.get(j).getOutermostBlossom();
-                Vertex v1 = vertices.get(i);
-                Vertex v2 = vertices.get(j);
-                
-                double changeNeeded = r;
-                // zmysel to ma riesit len pre dva rozne vonkajsie kvety na parnej urovni
-                // cinky maju uroven 0 (ani parna, ani neparna), cize pre tie to neriesime
-                if ((b1 != b2) && (b1.levelParity == 1) && (b2.levelParity == 1)){
-                    changeNeeded = (incidenceMatrix[i][j] - v1.getCharge()- v2.getCharge()) / 2;
-                }
-                
-                // ak jedna z bublin je cinka (ta co ma levelParity 0)
-                else if ((b1.levelParity == 0) && (b2.levelParity == 1)){
-                    changeNeeded = incidenceMatrix[i][j] - v1.getCharge() - v2.getCharge();
-                    if (changeNeeded < 0){
-                        //System.err.println("VYSIEL ZAPORNY CHANGE, NIECO SA POSRALO");
-                    }
-                }
-                
-                if (changeNeeded < r) {
-                    r = changeNeeded;
-                }
+        for(Edge e : edgeList){
+            Blossom b1 = vertices.get(e.u.id).getOutermostBlossom();
+            Blossom b2 = vertices.get(e.v.id).getOutermostBlossom();
+            Vertex v1 = vertices.get(e.u.id);
+            Vertex v2 = vertices.get(e.v.id);
+            
+            
+            double changeNeeded = r;
+            // zmysel to ma riesit len pre dva rozne vonkajsie kvety na parnej urovni
+            // cinky maju uroven 0 (ani parna, ani neparna), cize pre tie to neriesime
+            if ((b1 != b2) && (b1.levelParity == 1) && (b2.levelParity == 1)){
+                changeNeeded = (e.price - v1.getCharge()- v2.getCharge()) / 2;
+            }
+
+            // ak jedna z bublin je cinka (ta co ma levelParity 0)
+            else if ((b1.levelParity == 0) && (b2.levelParity == 1)){
+                changeNeeded = e.price - v1.getCharge() - v2.getCharge();
+                /*if (changeNeeded < 0){
+                    System.err.println("VYSIEL ZAPORNY CHANGE, NIECO SA POSRALO");
+                }*/
+            }
+
+            if (changeNeeded < r) {
+                r = changeNeeded;
             }
         }
         

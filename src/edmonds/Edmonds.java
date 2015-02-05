@@ -194,22 +194,18 @@ public class Edmonds {
             }
             
             // teraz overime pripady s naplnenim hrany
-            for (int i = 0; i < myGraph.vertexCount; i++){
-                for (int j = 0; j < myGraph.vertexCount; j++){
-                    if (i == j){
-                        continue;
-                    }
-                    Blossom blossom1 = myGraph.vertices.get(i).getOutermostBlossom();
-                    Blossom blossom2 = myGraph.vertices.get(j).getOutermostBlossom();
-                    Vertex vertex1 = myGraph.vertices.get(i);
-                    Vertex vertex2 = myGraph.vertices.get(j);
+            for (Edge e : myGraph.edgeList){
+                    Blossom blossom1 = e.u.getOutermostBlossom();
+                    Blossom blossom2 = e.v.getOutermostBlossom();
+                    Vertex vertex1 = e.u;
+                    Vertex vertex2 = e.v;
                     
-                    double edgeCapacity = myGraph.incidenceMatrix[i][j];
+                    double edgeCapacity = e.price;
                     
                     // ak sa nejaka hrana naplnila
                     if (vertex1.getCharge() + vertex2.getCharge() == edgeCapacity){
                         // naplnena hrana
-                        Edge fullEdge = new Edge(myGraph.vertices.get(i), myGraph.vertices.get(j), (int)edgeCapacity);
+                        Edge fullEdge = e;
                         // (P2) ak sa naplnila hrana medzi kvetom na parnej urovni a cinkou
                         if (blossom1.levelParity == 1 && blossom2.levelParity == 0){
                             //System.err.println("P2 " + blossom1 + " " + blossom2);
@@ -368,7 +364,7 @@ public class Edmonds {
                             hungarianForest.remove(tree2);
                         }
                     }
-                }
+                
             }
         }
         

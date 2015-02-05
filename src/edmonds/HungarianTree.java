@@ -20,6 +20,10 @@ public class HungarianTree {
         root.treeRef = this;
     }
     
+    int getSize(){
+        return root.getSize();
+    }
+    
     public ArrayList<Dumbbell> breakToDumbbells(HashSet<TreeNode> alternatingPath){
         return root.breakToDumbbells(alternatingPath);
     }

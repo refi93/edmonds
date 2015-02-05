@@ -43,6 +43,7 @@ public class Dumbbell {
     }
     
     public int getTotalMatchingPrice(){
+        System.out.println(connectingEdge);
         return connectingEdge.price + b1.getMatchingPrice() + b2.getMatchingPrice();
     }
     

@@ -55,7 +55,6 @@ public class Edmonds {
         // dokym nemame parovanie
         while (hungarianForest.size() != 0){
             double r = myGraph.getR();
-            System.out.println(r);
             
             // zmenime naboj v stromoch madarskeho lesa
             for (int i = 0;i < hungarianForest.size(); i++){
@@ -69,7 +68,7 @@ public class Edmonds {
                 Blossom blossom = myGraph.vertices.get(i).getOutermostBlossom();
                 // (P1) zelenej bubline na neparnej urovni klesol naboj na 0
                 if (blossom.levelParity == -1 && blossom.thickness == 0){
-                    
+                    System.err.println("P1");
                     // overime, ze skutocne ide o zelenu bublinu
                     if (blossom instanceof GreenBlossom){
                         GreenBlossom oldGreenBlossom = (GreenBlossom) blossom;
@@ -202,9 +201,6 @@ public class Edmonds {
                     Blossom blossom2 = myGraph.vertices.get(j).getOutermostBlossom();
                     
                     double edgeCapacity = myGraph.incidenceMatrix[i][j];
-                    if (i == 3 && j == 31){
-                        System.out.println(i + " " + j + " " + blossom1.thickness + " " + blossom2.thickness + " " + blossom1.levelParity + " " + blossom2.levelParity);
-                    }
                     
                     if (blossom1.thickness + blossom2.thickness > edgeCapacity){
                         System.err.println(blossom1 + " " + blossom2 + " " + blossom1.levelParity + " " + blossom2.levelParity + " " + blossom1.thickness + " " + blossom2.thickness + " " + edgeCapacity + " " + "PRESIAHNUTA KAPACITA HRANY, NIECO SA POSRALO");
@@ -216,7 +212,7 @@ public class Edmonds {
                         Edge fullEdge = new Edge(myGraph.vertices.get(i), myGraph.vertices.get(j), (int)edgeCapacity);
                         // (P2) ak sa naplnila hrana medzi kvetom na parnej urovni a cinkou
                         if (blossom1.levelParity == 1 && blossom2.levelParity == 0){
-                            
+                            System.err.println("P2");
                             // odstranime cinku
                             Dumbbell dumb = blossom2.dumbbellRef;
                             dumb.b1.dumbbellRef = null;
@@ -244,6 +240,8 @@ public class Edmonds {
                             
                             newNodeFirst.setParent(blossom1.treeNodeRef, fullEdge);
                             newNodeSecond.setParent(newNodeFirst, dumb.connectingEdge);
+                            System.out.println("newnodefirst " + newNodeFirst.containedBlossom);
+                            System.out.println("newnodefirst parity " + newNodeFirst.containedBlossom.levelParity);
                         }
                         
                         // (P3) ak sa naplni hrana medzi dvomi kvetmi v strome (stat sa to moze len na parnej urovni, lebo len tam je kladny prirastok
@@ -251,6 +249,7 @@ public class Edmonds {
                                 blossom1.levelParity == 1 && blossom2.levelParity == 1 && 
                                 blossom1.treeNodeRef.treeRef == blossom2.treeNodeRef.treeRef){
                             
+                            System.err.println("P3");
                             HungarianTree currentTree = blossom1.treeNodeRef.treeRef;
                             
                             // zoznam predchodcov vrcholu s prislusnymi hranami
@@ -326,7 +325,8 @@ public class Edmonds {
                         }
                         
                         // (P4) ak sa naplni hrana medzi dvomi roznymi stromami, oba stromy sa rozpadnu na cinky
-                        else if (blossom1.treeNodeRef != null && blossom2.treeNodeRef != null && blossom1.treeNodeRef.treeRef != blossom2.treeNodeRef.treeRef){
+                        else if (blossom1.treeNodeRef != null && blossom2.treeNodeRef != null && blossom1.treeNodeRef.treeRef != blossom2.treeNodeRef.treeRef && blossom1.levelParity == 1 && blossom2.levelParity == 1){
+                            System.err.println("P4");
                             HungarianTree tree1 = blossom1.treeNodeRef.treeRef;
                             ArrayList<TreeNode> nodePath1 = blossom1.treeNodeRef.getAncestors();
                             ArrayList<Edge> edgePath1 = blossom1.treeNodeRef.getAncestorEdges();
@@ -337,8 +337,17 @@ public class Edmonds {
                             
                             
                             // pridame cinky na ktore sa rozpadli oba stromy, okrem tej cinky, co ma tu naplnenu hranu
-                            dumbbells.addAll(tree1.breakToDumbbells(new HashSet<TreeNode>(nodePath1)));
-                            dumbbells.addAll(tree2.breakToDumbbells(new HashSet<TreeNode>(nodePath2)));
+                            //System.out.println(blossom1 + " " + blossom2);
+                            //System.out.println(blossom1.levelParity + " " + blossom2.levelParity);
+                            //System.out.println("tree 1 size is " + tree1.getSize());
+                            //System.out.println("nodePath1 size is " + nodePath1.size());
+                            //System.out.println("tree 2 size is " + tree2.getSize());
+                            ArrayList<Dumbbell> arr1 = tree1.breakToDumbbells(new HashSet<TreeNode>(nodePath1));
+                            dumbbells.addAll(arr1);
+                            //System.out.println("arr1 " + arr1.size());
+                            ArrayList<Dumbbell> arr2 = tree2.breakToDumbbells(new HashSet<TreeNode>(nodePath2));
+                            dumbbells.addAll(arr2);
+                            //System.out.println("arr2 " + arr2.size());
                             
                             // a este pridame cinku, co vznike naplnenou hranou medzi stromami
                             //Dumbbell dumb = new Dumbbell(nodePath1.get(nodePath1.size() - 1).containedBlossom, nodePath2.get(nodePath2.size() - 1).containedBlossom, fullEdge);
@@ -354,6 +363,7 @@ public class Edmonds {
             }
         }
         
+        System.out.println("Matching contains the following edges:");
         int matchingPrice = 0;
         for(Dumbbell dumb : dumbbells){
             matchingPrice += dumb.getTotalMatchingPrice();

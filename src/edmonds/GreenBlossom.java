@@ -89,6 +89,7 @@ public class GreenBlossom extends Blossom{
         int ret = 0;
         for(int i = 0; i < edgesBetweenBlossoms.size(); i++){
             if (i % 2 == 1){
+                System.out.println(edgesBetweenBlossoms.get(i));
                 ret += edgesBetweenBlossoms.get(i).price;
             }
         }

@@ -28,6 +28,14 @@ public class TreeNode {
         this.treeRef = null;
     }
     
+    public int getSize(){
+        int ret = 1;
+        for(int i = 0; i < this.children.size(); i++){
+            ret += this.children.get(i).getSize();
+        }
+        return ret;
+    }
+    
     public void zmena(double r){
         containedBlossom.zmena(r);
         for (int i = 0; i < children.size(); i++){

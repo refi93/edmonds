@@ -44,4 +44,9 @@ public class Edge {
         
         return (ret1 || ret2) && (e.price == this.price);
     }
+    
+    @Override
+    public String toString(){
+        return (this.u.id + 1) + " " + (this.v.id + 1) + " " + this.price;
+    }
 }
